@@ -226,3 +226,7 @@ export PATH="/Users/developer/Library/Android/sdk/platform-tools:$PATH"
 adb connect 192.168.1.8:35341 
 flutter run -d 192.168.1.8:35341
 ```
+
+run in browser
+
+export PATH="$PATH:/workspaces/autolab-main/flutter/bin" && cd /workspaces/autolab-main && flutter run -d web-server --web-port=8080 --web-hostname=0.0.0.0

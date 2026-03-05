@@ -121,6 +121,10 @@ app.*.symbols
 # ========================================
 # Custom Project-Specific Rules
 # ========================================
+
+# Flutter SDK (downloaded automatically by setup.sh — do not commit)
+flutter/
+
 .build/
 
 # Documentation markdown files (if you want to ignore some)
@@ -128,4 +132,4 @@ app.*.symbols
 
 # Generated files
 
-*.md
+*.md/flutter/
