@@ -117,3 +117,15 @@ app.*.symbols
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 !/dev/ci/**/Gemfile.lock
+
+# ========================================
+# Custom Project-Specific Rules
+# ========================================
+.build/
+
+# Documentation markdown files (if you want to ignore some)
+.docs/
+
+# Generated files
+
+*.md

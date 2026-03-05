@@ -33,6 +33,13 @@ class _LoaderWidgetState extends State<LoaderWidget> {
 
     // On page load action.
     SchedulerBinding.instance.addPostFrameCallback((_) async {
+      // Check if usersave is null
+      if (FFAppState().usersave == null) {
+        print('Error: usersave is null, redirecting to login');
+        context.goNamed(LoginWidget.routeName);
+        return;
+      }
+
       _model.loggedInUser =
           await UsersRecord.getDocumentOnce(FFAppState().usersave!);
       if (_model.loggedInUser?.roleId == '1') {

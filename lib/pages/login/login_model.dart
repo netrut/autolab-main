@@ -7,10 +7,25 @@ import 'package:flutter/material.dart';
 class LoginModel extends FlutterFlowModel<LoginWidget> {
   ///  State fields for stateful widgets in this page.
 
+  // State field(s) for login mode toggle
+  bool isEmailMode = true; // Default to email mode since phone auth is broken
+
   // State field(s) for mobile widget.
   FocusNode? mobileFocusNode;
   TextEditingController? mobileTextController;
   String? Function(BuildContext, String?)? mobileTextControllerValidator;
+
+  // State field(s) for email login
+  FocusNode? emailFocusNode;
+  TextEditingController? emailController;
+  String? Function(BuildContext, String?)? emailControllerValidator;
+
+  // State field(s) for password
+  FocusNode? passwordFocusNode;
+  TextEditingController? passwordController;
+  bool passwordVisible = false;
+  String? Function(BuildContext, String?)? passwordControllerValidator;
+
   // Stores action output result for [Firestore Query - Query a collection] action in Button widget.
   UsersRecord? loginCheck;
 
@@ -21,5 +36,11 @@ class LoginModel extends FlutterFlowModel<LoginWidget> {
   void dispose() {
     mobileFocusNode?.dispose();
     mobileTextController?.dispose();
+
+    emailFocusNode?.dispose();
+    emailController?.dispose();
+
+    passwordFocusNode?.dispose();
+    passwordController?.dispose();
   }
 }
