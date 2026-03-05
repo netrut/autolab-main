@@ -15,7 +15,7 @@
   "postStartCommand": "bash /workspaces/autolab-main/start.sh &",
 
   // First-time setup when Codespace is first created
-  "postCreateCommand": "sudo apt-get install -y git-lfs && git lfs install && bash /workspaces/autolab-main/setup.sh",
+  "postCreateCommand": "sudo apt-get update -qq && sudo apt-get install -y git-lfs python3-minimal psmisc && git lfs install && bash /workspaces/autolab-main/setup.sh",
   // "postCreateCommand": "bash /workspaces/autolab-main/setup.sh",
   "customizations": {
     "vscode": {

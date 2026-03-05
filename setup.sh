@@ -20,7 +20,7 @@ if [ ! -f "$FLUTTER_BIN/flutter" ]; then
   echo "▶ Step 1/3  Downloading & Extracting Flutter $FLUTTER_VERSION..."
   wget -q --show-progress \
     "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${FLUTTER_VERSION}-stable.tar.xz" \
-    -O - | tar xf - -C /workspaces/autolab-main/
+    -O - | tar xJf - -C /workspaces/autolab-main/
   echo "            Flutter installed at $FLUTTER_DIR"
 else
   echo ""
@@ -40,7 +40,7 @@ fi
 echo ""
 echo "▶ Step 2/3  Installing dependencies..."
 cd /workspaces/autolab-main
-flutter config --enable-web -q
+flutter config --enable-web
 flutter pub get
 
 # Step 3 — Build for web

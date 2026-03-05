@@ -37,4 +37,24 @@ echo "     bash start.sh --rebuild"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 cd "$BUILD_DIR"
-python3 -m http.server 8080 --bind 0.0.0.0
+# python3 -m http.server 8080 --bind 0.0.0.0
+python3 - <<'EOF'
+import http.server, os, socketserver
+
+PORT = 8080
+BUILD_DIR = os.getcwd()
+
+class SPAHandler(http.server.SimpleHTTPRequestHandler):
+    def do_GET(self):
+        # Serve the file if it exists, otherwise fall back to index.html (SPA routing)
+        path = self.translate_path(self.path)
+        if not os.path.exists(path) or os.path.isdir(path) and not os.path.exists(os.path.join(path, 'index.html')):
+            self.path = '/index.html'
+        super().do_GET()
+
+    def log_message(self, format, *args):
+        pass  # suppress request logs
+
+with socketserver.TCPServer(("0.0.0.0", PORT), SPAHandler) as httpd:
+    httpd.serve_forever()
+EOF
