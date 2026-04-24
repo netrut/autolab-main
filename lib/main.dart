@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/foundation.dart';
 import 'auth/firebase_auth/firebase_user_provider.dart';
@@ -14,7 +13,6 @@ import 'backend/firebase/firebase_config.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import 'flutter_flow/flutter_flow_util.dart';
 import 'flutter_flow/internationalization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'index.dart';
@@ -26,19 +24,26 @@ void main() async {
 
   await initFirebase();
   await FlutterFlowTheme.initialize();
-  await Firebase.initializeApp();
 
-  await FirebaseAppCheck.instance.activate(
-    androidProvider: kDebugMode
-        ? AndroidProvider.debug
-        : AndroidProvider.playIntegrity,
-  );
+  // Firebase App Check is only needed for mobile platforms
+  if (!kIsWeb) {
+    try {
+      await FirebaseAppCheck.instance.activate(
+        androidProvider:
+            kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity,
+      );
 
-  // Print App Check debug token asynchronously, but don't block app startup
-  if (kDebugMode) {
-    FirebaseAppCheck.instance.getToken().then((debugToken) {
-      print('App Check debug token: $debugToken');
-    });
+      // Print App Check debug token asynchronously, but don't block app startup
+      if (kDebugMode) {
+        FirebaseAppCheck.instance.getToken().then((debugToken) {
+          print('App Check debug token: $debugToken');
+        }).catchError((error) {
+          print('App Check token error (non-critical in debug mode): $error');
+        });
+      }
+    } catch (e) {
+      print('Firebase App Check initialization failed: $e');
+    }
   }
 
   final appState = FFAppState();
@@ -53,6 +58,7 @@ void main() async {
     child: MyApp(),
   ));
 }
+
 class MyApp extends StatefulWidget {
   // This widget is the root of your application.
   @override
