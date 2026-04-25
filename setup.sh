@@ -3,6 +3,8 @@
 #  Autolab — Full First-Time Setup
 #  Run once in a new Codespace: bash setup.sh
 # ─────────────────────────────────────────────
+#chmod +x /workspaces/autolab-main/setup.sh
+#./setup.sh
 
 set -e  # stop on any error
 

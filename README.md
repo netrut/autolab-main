@@ -229,4 +229,4 @@ flutter run -d 192.168.1.8:35341
 
 run in browser
 
-export PATH="$PATH:/workspaces/autolab-main/flutter/bin" && cd /workspaces/autolab-main && flutter run -d web-server --web-port=8080 --web-hostname=0.0.0.0
+fuser -k 8080/tcp 2>/dev/null && echo "Stopped previous server on port 8080" || true && cd /workspaces/autolab-main && ./flutter/bin/flutter run -d web-server --web-port=8080 --web-hostname=0.0.0.0

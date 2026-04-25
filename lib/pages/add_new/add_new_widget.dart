@@ -1,6 +1,7 @@
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/alert_widget.dart';
+import '/components/main_bottom_nav_bar.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -66,7 +67,7 @@ class _AddNewWidgetState extends State<AddNewWidget> {
         // Customize what your widget looks like when it's loading.
         if (!snapshot.hasData) {
           return Scaffold(
-            backgroundColor: Colors.black,
+            backgroundColor: Color(0xFFF3F3F3),
             body: Center(
               child: SizedBox(
                 width: 50.0,
@@ -80,14 +81,10 @@ class _AddNewWidgetState extends State<AddNewWidget> {
             ),
           );
         }
-        List<UsersRecord> addNewUsersRecordList = snapshot.data!;
         // Return an empty Container when the item does not exist.
         if (snapshot.data!.isEmpty) {
           return Container();
         }
-        final addNewUsersRecord = addNewUsersRecordList.isNotEmpty
-            ? addNewUsersRecordList.first
-            : null;
 
         return GestureDetector(
           onTap: () {
@@ -96,7 +93,7 @@ class _AddNewWidgetState extends State<AddNewWidget> {
           },
           child: Scaffold(
             key: scaffoldKey,
-            backgroundColor: Colors.black,
+            backgroundColor: Color(0xFFF3F3F3),
             drawer: Drawer(
               elevation: 10.0,
               child: Container(
@@ -278,8 +275,6 @@ class _AddNewWidgetState extends State<AddNewWidget> {
                                           safeSetState(() {});
                                         return;
                                       }
-
-                                      if (_shouldSetState) safeSetState(() {});
                                     },
                                     child: Material(
                                       color: Colors.transparent,
@@ -768,116 +763,135 @@ class _AddNewWidgetState extends State<AddNewWidget> {
               ),
             ),
             appBar: AppBar(
-              backgroundColor: Colors.black,
-              iconTheme: IconThemeData(color: Colors.white),
+              backgroundColor: Color(0xFFF3F3F3),
+              iconTheme: IconThemeData(color: Color(0xFF2A2A2A)),
               automaticallyImplyLeading: true,
+              title: Text(
+                'ADD NEW',
+                style: FlutterFlowTheme.of(context).titleMedium.override(
+                      font: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w700,
+                        fontStyle:
+                            FlutterFlowTheme.of(context).titleMedium.fontStyle,
+                      ),
+                      color: Color(0xFF1F1F1F),
+                      letterSpacing: 0.8,
+                      fontWeight: FontWeight.w700,
+                    ),
+              ),
               actions: [],
               centerTitle: true,
               elevation: 0.0,
             ),
+            bottomNavigationBar: MainBottomNavBar(
+              currentIndex: 1,
+            ),
             body: SafeArea(
               top: true,
-              child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(10.0, 6.0, 10.0, 0.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Align(
-                      alignment: AlignmentDirectional(0.0, 0.0),
-                      child: Padding(
-                        padding:
-                            EdgeInsetsDirectional.fromSTEB(0.0, 16.0, 0.0, 0.0),
-                        child: Container(
-                          width: MediaQuery.sizeOf(context).width * 0.95,
-                          height: 50.0,
-                          decoration: BoxDecoration(
-                            color: FlutterFlowTheme.of(context)
-                                .secondaryBackground,
-                            borderRadius: BorderRadius.circular(8.0),
-                            border: Border.all(
-                              color: FlutterFlowTheme.of(context)
-                                  .primaryBackground,
-                              width: 2.0,
-                            ),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(
-                                8.0, 0.0, 8.0, 0.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      4.0, 0.0, 4.0, 0.0),
-                                  child: Icon(
-                                    Icons.search_rounded,
-                                    color: Color(0xFF95A1AC),
-                                    size: 24.0,
+                    Padding(
+                      padding:
+                          EdgeInsetsDirectional.fromSTEB(2.0, 2.0, 2.0, 2.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Add New Vehicle',
+                            style: FlutterFlowTheme.of(context)
+                                .headlineSmall
+                                .override(
+                                  font: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w700,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .headlineSmall
+                                        .fontStyle,
                                   ),
+                                  color: Color(0xFF1E1E1E),
+                                  fontSize: 30.0,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w700,
                                 ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        4.0, 0.0, 0.0, 0.0),
+                          ),
+                          Text(
+                            'Manage your vehicles and quickly add service updates',
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  font: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w500,
+                                    fontStyle: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .fontStyle,
+                                  ),
+                                  color: Color(0xFF7A7A7A),
+                                  letterSpacing: 0.0,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 12.0),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: 46.0,
+                            decoration: BoxDecoration(
+                              color: Color(0xFFEFEFEF),
+                              borderRadius: BorderRadius.circular(12.0),
+                              border: Border.all(
+                                color: Color(0xFFDCDCDC),
+                                width: 1.0,
+                              ),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  12.0, 0.0, 8.0, 0.0),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.search_rounded,
+                                    color: Color(0xFF8B8B8B),
+                                    size: 22.0,
+                                  ),
+                                  Expanded(
                                     child: TextFormField(
                                       controller:
                                           _model.searchFieldTextController,
                                       focusNode: _model.searchFieldFocusNode,
                                       onChanged: (_) => EasyDebounce.debounce(
                                         '_model.searchFieldTextController',
-                                        Duration(milliseconds: 2000),
+                                        Duration(milliseconds: 350),
                                         () => safeSetState(() {}),
                                       ),
-                                      onFieldSubmitted: (_) async {
-                                        _model.searchText = _model
-                                            .searchFieldTextController.text;
-                                        safeSetState(() {});
-                                      },
                                       obscureText: false,
                                       decoration: InputDecoration(
-                                        labelText: 'Search ',
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Color(0x00000000),
-                                            width: 1.0,
-                                          ),
-                                          borderRadius: const BorderRadius.only(
-                                            topLeft: Radius.circular(4.0),
-                                            topRight: Radius.circular(4.0),
-                                          ),
-                                        ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Color(0x00000000),
-                                            width: 1.0,
-                                          ),
-                                          borderRadius: const BorderRadius.only(
-                                            topLeft: Radius.circular(4.0),
-                                            topRight: Radius.circular(4.0),
-                                          ),
-                                        ),
-                                        errorBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Color(0x00000000),
-                                            width: 1.0,
-                                          ),
-                                          borderRadius: const BorderRadius.only(
-                                            topLeft: Radius.circular(4.0),
-                                            topRight: Radius.circular(4.0),
-                                          ),
-                                        ),
-                                        focusedErrorBorder:
-                                            UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Color(0x00000000),
-                                            width: 1.0,
-                                          ),
-                                          borderRadius: const BorderRadius.only(
-                                            topLeft: Radius.circular(4.0),
-                                            topRight: Radius.circular(4.0),
-                                          ),
-                                        ),
+                                        hintText: 'Search vehicle number',
+                                        hintStyle: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              font: GoogleFonts.poppins(
+                                                fontWeight: FontWeight.w400,
+                                                fontStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .fontStyle,
+                                              ),
+                                              color: Color(0xFF8A8A8A),
+                                              letterSpacing: 0.0,
+                                            ),
+                                        enabledBorder: InputBorder.none,
+                                        focusedBorder: InputBorder.none,
+                                        errorBorder: InputBorder.none,
+                                        focusedErrorBorder: InputBorder.none,
+                                        contentPadding:
+                                            EdgeInsetsDirectional.fromSTEB(
+                                                10.0, 0.0, 10.0, 0.0),
                                         suffixIcon: _model
                                                 .searchFieldTextController!
                                                 .text
@@ -891,6 +905,7 @@ class _AddNewWidgetState extends State<AddNewWidget> {
                                                 },
                                                 child: Icon(
                                                   Icons.clear,
+                                                  color: Color(0xFF7A7A7A),
                                                   size: 20.0,
                                                 ),
                                               )
@@ -899,26 +914,15 @@ class _AddNewWidgetState extends State<AddNewWidget> {
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
-                                            font: GoogleFonts.interTight(
-                                              fontWeight:
-                                                  FlutterFlowTheme.of(context)
-                                                      .bodyMedium
-                                                      .fontWeight,
+                                            font: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w500,
                                               fontStyle:
                                                   FlutterFlowTheme.of(context)
                                                       .bodyMedium
                                                       .fontStyle,
                                             ),
-                                            color: Color(0xFF95A1AC),
+                                            color: Color(0xFF2B2B2B),
                                             letterSpacing: 0.0,
-                                            fontWeight:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontWeight,
-                                            fontStyle:
-                                                FlutterFlowTheme.of(context)
-                                                    .bodyMedium
-                                                    .fontStyle,
                                           ),
                                       textAlign: TextAlign.start,
                                       validator: _model
@@ -926,103 +930,76 @@ class _AddNewWidgetState extends State<AddNewWidget> {
                                           .asValidator(context),
                                     ),
                                   ),
-                                ),
-                                InkWell(
-                                  splashColor: Colors.transparent,
-                                  focusColor: Colors.transparent,
-                                  hoverColor: Colors.transparent,
-                                  highlightColor: Colors.transparent,
-                                  onTap: () async {
-                                    context.pushNamed(FilterWidget.routeName);
-                                  },
-                                  child: Icon(
-                                    Icons.tune_rounded,
-                                    color: Colors.black,
-                                    size: 24.0,
+                                  InkWell(
+                                    splashColor: Colors.transparent,
+                                    focusColor: Colors.transparent,
+                                    hoverColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    onTap: () async {
+                                      context.pushNamed(
+                                        FilterWidget.routeName,
+                                        queryParameters: {
+                                          'mode': serializeParam(
+                                            'vehicle',
+                                            ParamType.String,
+                                          ),
+                                        }.withoutNulls,
+                                      );
+                                    },
+                                    child: Container(
+                                      width: 32.0,
+                                      height: 32.0,
+                                      decoration: BoxDecoration(
+                                        color: Color(0xFFE3E3E3),
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                      ),
+                                      child: Icon(
+                                        Icons.tune_rounded,
+                                        color: Color(0xFF2A2A2A),
+                                        size: 18.0,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 0.0, 0.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Flexible(
-                            child: Text(
-                              'Add New',
-                              style: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .override(
-                                    font: GoogleFonts.interTight(
-                                      fontWeight: FontWeight.w600,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .bodyMedium
-                                          .fontStyle,
-                                    ),
-                                    color: Colors.white,
-                                    fontSize: 18.0,
-                                    letterSpacing: 0.0,
+                        SizedBox(width: 10.0),
+                        FFButtonWidget(
+                          onPressed: () async {
+                            context.pushNamed(VechileDetailsWidget.routeName);
+                          },
+                          text: '+ Add',
+                          options: FFButtonOptions(
+                            height: 46.0,
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                18.0, 0.0, 18.0, 0.0),
+                            iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            color: Color(0xFF1F1F1F),
+                            textStyle: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  font: GoogleFonts.poppins(
                                     fontWeight: FontWeight.w600,
                                     fontStyle: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .fontStyle,
                                   ),
-                            ),
+                                  color: Colors.white,
+                                  letterSpacing: 0.0,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                            elevation: 0.0,
+                            borderRadius: BorderRadius.circular(12.0),
                           ),
-                          FFButtonWidget(
-                            onPressed: () async {
-                              context.pushNamed(VechileDetailsWidget.routeName);
-                            },
-                            text: 'Add',
-                            options: FFButtonOptions(
-                              width: 130.0,
-                              height: 40.0,
-                              padding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              iconPadding: EdgeInsetsDirectional.fromSTEB(
-                                  0.0, 0.0, 0.0, 0.0),
-                              color: Colors.white,
-                              textStyle: FlutterFlowTheme.of(context)
-                                  .titleSmall
-                                  .override(
-                                    font: GoogleFonts.interTight(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontStyle,
-                                    ),
-                                    color: Colors.black,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .titleSmall
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .titleSmall
-                                        .fontStyle,
-                                  ),
-                              borderSide: BorderSide(
-                                color: Colors.transparent,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    // ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 0.0, 44.0),
+                    SizedBox(height: 14.0),
+                    Expanded(
                       child: AuthUserStreamWidget(
                         builder: (context) => PagedListView<
                             DocumentSnapshot<Object?>?, VechileDetailsRecord>(
@@ -1032,14 +1009,14 @@ class _AddNewWidgetState extends State<AddNewWidget> {
                               isNotEqualTo: currentPhoneNumber,
                             ),
                           ),
-                          padding: EdgeInsets.zero,
-                          primary: false,
-                          shrinkWrap: true,
+                          padding: EdgeInsetsDirectional.fromSTEB(
+                              0.0, 0.0, 0.0, 20.0),
+                          primary: true,
+                          shrinkWrap: false,
                           reverse: false,
                           scrollDirection: Axis.vertical,
                           builderDelegate:
                               PagedChildBuilderDelegate<VechileDetailsRecord>(
-                            // Customize what your widget looks like when it's loading the first page.
                             firstPageProgressIndicatorBuilder: (_) => Center(
                               child: SizedBox(
                                 width: 50.0,
@@ -1051,7 +1028,6 @@ class _AddNewWidgetState extends State<AddNewWidget> {
                                 ),
                               ),
                             ),
-                            // Customize what your widget looks like when it's loading another page.
                             newPageProgressIndicatorBuilder: (_) => Center(
                               child: SizedBox(
                                 width: 50.0,
@@ -1063,281 +1039,291 @@ class _AddNewWidgetState extends State<AddNewWidget> {
                                 ),
                               ),
                             ),
-
+                            noItemsFoundIndicatorBuilder: (_) => Center(
+                              child: Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 40.0, 0.0, 0.0),
+                                child: Text(
+                                  'No vehicles found',
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        font: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w500,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodyMedium
+                                                  .fontStyle,
+                                        ),
+                                        color: Color(0xFF7A7A7A),
+                                        letterSpacing: 0.0,
+                                      ),
+                                ),
+                              ),
+                            ),
                             itemBuilder: (context, _, listViewIndex) {
                               final listViewVechileDetailsRecord = _model
                                   .listViewPagingController2!
                                   .itemList![listViewIndex];
-                              return Visibility(
-                                visible: (_model.searchText == '') ||
-                                    (listViewVechileDetailsRecord.vechileNo ==
-                                        _model
-                                            .searchFieldTextController.text) ||
-                                    (_model.searchFieldTextController.text ==
-                                        ''),
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      16.0, 4.0, 16.0, 8.0),
-                                  child: Container(
-                                    width: double.infinity,
-                                    height: 180.0,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFFF0F0F0),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          blurRadius: 4.0,
-                                          color: Color(0x32000000),
-                                          offset: Offset(
-                                            0.0,
-                                            2.0,
-                                          ),
-                                        )
-                                      ],
-                                      borderRadius: BorderRadius.circular(8.0),
+                              final searchQuery = _model
+                                  .searchFieldTextController.text
+                                  .toLowerCase()
+                                  .trim();
+                              final matchesQuery = searchQuery.isEmpty ||
+                                  listViewVechileDetailsRecord.vechileNo
+                                      .toLowerCase()
+                                      .contains(searchQuery) ||
+                                  listViewVechileDetailsRecord.carBike
+                                      .toLowerCase()
+                                      .contains(searchQuery) ||
+                                  listViewVechileDetailsRecord.mobile
+                                      .toLowerCase()
+                                      .contains(searchQuery);
+
+                              if (!matchesQuery) {
+                                return SizedBox.shrink();
+                              }
+
+                              return Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    0.0, 0.0, 0.0, 10.0),
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 144.0,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(16.0),
+                                    border: Border.all(
+                                      color: Color(0xFFE4E4E4),
+                                      width: 1.0,
                                     ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Flexible(
-                                          child: Align(
-                                            alignment:
-                                                AlignmentDirectional(-1.0, 0.0),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(26.0),
-                                              child: Image.network(
-                                                listViewVechileDetailsRecord
-                                                            .carBike ==
-                                                        'Car'
-                                                    ? 'https://res.cloudinary.com/dgiioqoop/image/upload/v1748438468/car_actqon.png'
-                                                    : 'https://res.cloudinary.com/dgiioqoop/image/upload/scotty_kitycv.png',
-                                                width: 200.0,
-                                                height: 250.0,
-                                                fit: BoxFit.contain,
-                                                alignment: Alignment(-1.0, 0.0),
-                                              ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        blurRadius: 10.0,
+                                        color: Color(0x14000000),
+                                        offset: Offset(0.0, 4.0),
+                                      )
+                                    ],
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            12.0, 12.0, 10.0, 12.0),
+                                        child: Container(
+                                          width: 118.0,
+                                          decoration: BoxDecoration(
+                                            color: Color(0xFFF3F3F3),
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                            child: Image.network(
+                                              listViewVechileDetailsRecord
+                                                          .carBike ==
+                                                      'Car'
+                                                  ? 'https://res.cloudinary.com/dgiioqoop/image/upload/v1748438468/car_actqon.png'
+                                                  : 'https://res.cloudinary.com/dgiioqoop/image/upload/scotty_kitycv.png',
+                                              fit: BoxFit.contain,
+                                              alignment: AlignmentDirectional(
+                                                  0.0, 0.0),
                                             ),
                                           ),
                                         ),
-                                        Align(
-                                          alignment:
-                                              AlignmentDirectional(1.0, 0.0),
-                                          child: Padding(
-                                            padding:
-                                                EdgeInsetsDirectional.fromSTEB(
-                                                    10.0, 0.0, 10.0, 0.0),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: [
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                          0.0, 10.0, 0.0, 10.0),
-                                                  child: Text(
-                                                    listViewVechileDetailsRecord
-                                                        .vechileNo,
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          font:
-                                                              GoogleFonts.inter(
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                          color: Colors.black,
-                                                          fontSize: 16.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                          0.0, 2.0, 0.0, 0.0),
-                                                  child: Text(
-                                                    listViewVechileDetailsRecord
-                                                        .carBike,
-                                                    style: FlutterFlowTheme.of(
-                                                            context)
-                                                        .bodyMedium
-                                                        .override(
-                                                          font:
-                                                              GoogleFonts.inter(
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            fontStyle:
-                                                                FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyMedium
-                                                                    .fontStyle,
-                                                          ),
-                                                          color: Colors.black,
-                                                          fontSize: 16.0,
-                                                          letterSpacing: 0.0,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodyMedium
-                                                                  .fontStyle,
-                                                        ),
-                                                  ),
-                                                ),
-                                                Align(
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                          1.0, 0.0),
-                                                  child: Builder(
-                                                    builder: (context) =>
-                                                        Padding(
+                                      ),
+                                      Expanded(
+                                        child: Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  0.0, 12.0, 12.0, 12.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                listViewVechileDetailsRecord
+                                                    .vechileNo,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .titleMedium
+                                                    .override(
+                                                      font: GoogleFonts.poppins(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .titleMedium
+                                                                .fontStyle,
+                                                      ),
+                                                      color: Color(0xFF242424),
+                                                      fontSize: 18.0,
+                                                      letterSpacing: 0.0,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                              ),
+                                              SizedBox(height: 4.0),
+                                              Text(
+                                                listViewVechileDetailsRecord
+                                                    .carBike,
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .bodyMedium
+                                                    .override(
+                                                      font: GoogleFonts.poppins(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodyMedium
+                                                                .fontStyle,
+                                                      ),
+                                                      color: Color(0xFF646464),
+                                                      letterSpacing: 0.0,
+                                                    ),
+                                              ),
+                                              SizedBox(height: 2.0),
+                                              Text(
+                                                'Owner: ${listViewVechileDetailsRecord.mobile}',
+                                                style: FlutterFlowTheme.of(
+                                                        context)
+                                                    .bodySmall
+                                                    .override(
+                                                      font: GoogleFonts.poppins(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontStyle:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .bodySmall
+                                                                .fontStyle,
+                                                      ),
+                                                      color: Color(0xFF8A8A8A),
+                                                      letterSpacing: 0.0,
+                                                    ),
+                                              ),
+                                              Spacer(),
+                                              Align(
+                                                alignment: AlignmentDirectional(
+                                                    1.0, 0.0),
+                                                child: Builder(
+                                                  builder: (context) =>
+                                                      FFButtonWidget(
+                                                    onPressed: () async {
+                                                      await showDialog(
+                                                        context: context,
+                                                        builder:
+                                                            (dialogContext) {
+                                                          return Dialog(
+                                                            elevation: 0,
+                                                            insetPadding:
+                                                                EdgeInsets.zero,
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .transparent,
+                                                            alignment: AlignmentDirectional(
+                                                                    0.0, 0.0)
+                                                                .resolve(
+                                                                    Directionality.of(
+                                                                        context)),
+                                                            child:
+                                                                GestureDetector(
+                                                              onTap: () {
+                                                                FocusScope.of(
+                                                                        dialogContext)
+                                                                    .unfocus();
+                                                                FocusManager
+                                                                    .instance
+                                                                    .primaryFocus
+                                                                    ?.unfocus();
+                                                              },
+                                                              child: Container(
+                                                                height: MediaQuery.sizeOf(
+                                                                            context)
+                                                                        .height *
+                                                                    0.8,
+                                                                width: MediaQuery.sizeOf(
+                                                                            context)
+                                                                        .width *
+                                                                    0.6,
+                                                                child:
+                                                                    AlertWidget(
+                                                                  chasisNo:
+                                                                      listViewVechileDetailsRecord
+                                                                          .chasisNo,
+                                                                  vechileNo:
+                                                                      listViewVechileDetailsRecord
+                                                                          .vechileNo,
+                                                                  mobileNo:
+                                                                      listViewVechileDetailsRecord
+                                                                          .mobile,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                      );
+                                                    },
+                                                    text: 'Add Service',
+                                                    options: FFButtonOptions(
+                                                      height: 34.0,
                                                       padding:
                                                           EdgeInsetsDirectional
                                                               .fromSTEB(
+                                                                  14.0,
                                                                   0.0,
-                                                                  15.0,
+                                                                  14.0,
+                                                                  0.0),
+                                                      iconPadding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
                                                                   0.0,
-                                                                  15.0),
-                                                      child: FFButtonWidget(
-                                                        onPressed: () async {
-                                                          await showDialog(
-                                                            context: context,
-                                                            builder:
-                                                                (dialogContext) {
-                                                              return Dialog(
-                                                                elevation: 0,
-                                                                insetPadding:
-                                                                    EdgeInsets
-                                                                        .zero,
-                                                                backgroundColor:
-                                                                    Colors
-                                                                        .transparent,
-                                                                alignment: AlignmentDirectional(
-                                                                        0.0,
-                                                                        0.0)
-                                                                    .resolve(
-                                                                        Directionality.of(
-                                                                            context)),
-                                                                child:
-                                                                    GestureDetector(
-                                                                  onTap: () {
-                                                                    FocusScope.of(
-                                                                            dialogContext)
-                                                                        .unfocus();
-                                                                    FocusManager
-                                                                        .instance
-                                                                        .primaryFocus
-                                                                        ?.unfocus();
-                                                                  },
-                                                                  child:
-                                                                      Container(
-                                                                    height:
-                                                                        MediaQuery.sizeOf(context).height *
-                                                                            0.8,
-                                                                    width: MediaQuery.sizeOf(context)
-                                                                            .width *
-                                                                        0.6,
-                                                                    child:
-                                                                        AlertWidget(
-                                                                      chasisNo:
-                                                                          listViewVechileDetailsRecord
-                                                                              .chasisNo,
-                                                                      vechileNo:
-                                                                          listViewVechileDetailsRecord
-                                                                              .vechileNo,
-                                                                      mobileNo:
-                                                                          listViewVechileDetailsRecord
-                                                                              .mobile,
-                                                                    ),
-                                                                  ),
+                                                                  0.0,
+                                                                  0.0,
+                                                                  0.0),
+                                                      color: Color(0xFF1F1F1F),
+                                                      textStyle:
+                                                          FlutterFlowTheme.of(
+                                                                  context)
+                                                              .bodySmall
+                                                              .override(
+                                                                font: GoogleFonts
+                                                                    .poppins(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  fontStyle: FlutterFlowTheme.of(
+                                                                          context)
+                                                                      .bodySmall
+                                                                      .fontStyle,
                                                                 ),
-                                                              );
-                                                            },
-                                                          );
-                                                        },
-                                                        text: 'Add',
-                                                        options:
-                                                            FFButtonOptions(
-                                                          height: 40.0,
-                                                          padding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      16.0,
-                                                                      0.0,
-                                                                      16.0,
-                                                                      0.0),
-                                                          iconPadding:
-                                                              EdgeInsetsDirectional
-                                                                  .fromSTEB(
-                                                                      0.0,
-                                                                      0.0,
-                                                                      0.0,
-                                                                      0.0),
-                                                          color: Colors.black,
-                                                          textStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .titleSmall
-                                                                  .override(
-                                                                    font: GoogleFonts
-                                                                        .interTight(
-                                                                      fontWeight: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .titleSmall
-                                                                          .fontWeight,
-                                                                      fontStyle: FlutterFlowTheme.of(
-                                                                              context)
-                                                                          .titleSmall
-                                                                          .fontStyle,
-                                                                    ),
-                                                                    color: Colors
-                                                                        .white,
-                                                                    letterSpacing:
-                                                                        0.0,
-                                                                    fontWeight: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .titleSmall
-                                                                        .fontWeight,
-                                                                    fontStyle: FlutterFlowTheme.of(
-                                                                            context)
-                                                                        .titleSmall
-                                                                        .fontStyle,
-                                                                  ),
-                                                          elevation: 0.0,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      8.0),
-                                                        ),
-                                                      ),
+                                                                color: Colors
+                                                                    .white,
+                                                                letterSpacing:
+                                                                    0.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                              ),
+                                                      elevation: 0.0,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10.0),
                                                     ),
                                                   ),
                                                 ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               );
