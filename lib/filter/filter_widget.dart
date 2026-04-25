@@ -13,6 +13,22 @@ import 'package:text_search/text_search.dart';
 import 'filter_model.dart';
 export 'filter_model.dart';
 
+enum _ServiceGroup {
+  due,
+  upcoming,
+  completed,
+}
+
+class _ServiceFilterItem {
+  const _ServiceFilterItem({
+    required this.label,
+    required this.queryValue,
+  });
+
+  final String label;
+  final String queryValue;
+}
+
 class FilterWidget extends StatefulWidget {
   const FilterWidget({
     super.key,
@@ -34,8 +50,194 @@ class _FilterWidgetState extends State<FilterWidget> {
   late FilterModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  _ServiceGroup _selectedServiceGroup = _ServiceGroup.due;
 
   bool get _isVehicleMode => widget.mode == 'vehicle';
+
+  bool get _isLegacyGroupLocked =>
+      widget.service == 'due' || widget.service == 'next';
+
+  _ServiceGroup get _lockedLegacyGroup =>
+      widget.service == 'next' ? _ServiceGroup.upcoming : _ServiceGroup.due;
+
+  _ServiceGroup get _activeLegacyGroup =>
+      _isLegacyGroupLocked ? _lockedLegacyGroup : _selectedServiceGroup;
+
+  Color _groupColor(_ServiceGroup group) {
+    switch (group) {
+      case _ServiceGroup.due:
+        return Color(0xFFDA8A1D);
+      case _ServiceGroup.upcoming:
+        return Color(0xFF2F7DE1);
+      case _ServiceGroup.completed:
+        return Color(0xFF2F9E56);
+    }
+  }
+
+  String _groupTitle(_ServiceGroup group) {
+    switch (group) {
+      case _ServiceGroup.due:
+        return 'Due Services';
+      case _ServiceGroup.upcoming:
+        return 'Upcoming Services';
+      case _ServiceGroup.completed:
+        return 'Service Completed';
+    }
+  }
+
+  List<_ServiceFilterItem> _groupItems(_ServiceGroup group) {
+    switch (group) {
+      case _ServiceGroup.due:
+        return const [
+          _ServiceFilterItem(label: 'Today Service Due', queryValue: 'Today'),
+          _ServiceFilterItem(
+              label: 'Due Service Yesterday', queryValue: 'Yesterday'),
+          _ServiceFilterItem(
+              label: 'Due Service Last 7 Days', queryValue: 'Last 7 Days'),
+          _ServiceFilterItem(
+              label: 'Due Service Last 30 Days', queryValue: ' Last 30 Days'),
+        ];
+      case _ServiceGroup.upcoming:
+        return const [
+          _ServiceFilterItem(
+              label: 'Service Next 7 Days', queryValue: 'Service Next 7 Days'),
+          _ServiceFilterItem(
+              label: 'Service Next 30 Days',
+              queryValue: 'Service Next 30 Days'),
+        ];
+      case _ServiceGroup.completed:
+        return const [
+          _ServiceFilterItem(
+              label: 'Service Complete Yesterday',
+              queryValue: 'Service Complete Yesterday'),
+          _ServiceFilterItem(
+              label: 'Service Complete Last 7 Days',
+              queryValue: 'Service Complete Last 7 Days'),
+          _ServiceFilterItem(
+              label: 'Service Complete Last 30 Days',
+              queryValue: 'Service Complete Last 30 Days'),
+        ];
+    }
+  }
+
+  Widget _buildLegacyGroupChip(BuildContext context, _ServiceGroup group) {
+    final isSelected = _activeLegacyGroup == group;
+    final color = _groupColor(group);
+
+    return InkWell(
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      onTap: _isLegacyGroupLocked
+          ? null
+          : () {
+              setState(() {
+                _selectedServiceGroup = group;
+              });
+            },
+      child: Container(
+        padding: EdgeInsetsDirectional.fromSTEB(12.0, 8.0, 12.0, 8.0),
+        decoration: BoxDecoration(
+          color: isSelected ? color.withValues(alpha: 0.12) : Colors.white,
+          borderRadius: BorderRadius.circular(10.0),
+          border: Border.all(
+            color: isSelected ? color : Color(0xFFD8D8D8),
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 8.0,
+              height: 8.0,
+              decoration: BoxDecoration(
+                color: color,
+                shape: BoxShape.circle,
+              ),
+            ),
+            SizedBox(width: 8.0),
+            Text(
+              _groupTitle(group),
+              style: FlutterFlowTheme.of(context).bodySmall.override(
+                    font: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w600,
+                      fontStyle:
+                          FlutterFlowTheme.of(context).bodySmall.fontStyle,
+                    ),
+                    color: isSelected ? color : Color(0xFF525252),
+                    letterSpacing: 0.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLegacyFilterOptionTile(
+    BuildContext context,
+    _ServiceGroup group,
+    _ServiceFilterItem item,
+  ) {
+    final color = _groupColor(group);
+
+    return InkWell(
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      onTap: () async {
+        context.pushNamed(
+          FilterShowWidget.routeName,
+          queryParameters: {
+            'today': serializeParam(
+              item.queryValue,
+              ParamType.String,
+            ),
+          }.withoutNulls,
+        );
+      },
+      child: Container(
+        padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 10.0, 12.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.0),
+          border: Border.all(color: Color(0xFFE7E7E7)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 8.0,
+              height: 8.0,
+              decoration: BoxDecoration(
+                color: color,
+                shape: BoxShape.circle,
+              ),
+            ),
+            SizedBox(width: 10.0),
+            Expanded(
+              child: Text(
+                item.label,
+                style: FlutterFlowTheme.of(context).bodyMedium.override(
+                      font: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w500,
+                        fontStyle:
+                            FlutterFlowTheme.of(context).bodyMedium.fontStyle,
+                      ),
+                      color: Color(0xFF1F1F1F),
+                      letterSpacing: 0.0,
+                      fontWeight: FontWeight.w500,
+                    ),
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 16.0,
+              color: Color(0xFF8A8A8A),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget _buildVehicleCard(BuildContext context, VechileDetailsRecord record) {
     return Container(
@@ -161,8 +363,8 @@ class _FilterWidgetState extends State<FilterWidget> {
                         height: 34.0,
                         padding: EdgeInsetsDirectional.fromSTEB(
                             14.0, 0.0, 14.0, 0.0),
-                        iconPadding: EdgeInsetsDirectional.fromSTEB(
-                            0.0, 0.0, 0.0, 0.0),
+                        iconPadding:
+                            EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                         color: Color(0xFF1F1F1F),
                         textStyle:
                             FlutterFlowTheme.of(context).bodySmall.override(
@@ -195,10 +397,13 @@ class _FilterWidgetState extends State<FilterWidget> {
     super.initState();
     _model = createModel(context, () => FilterModel());
 
+    _selectedServiceGroup =
+        widget.service == 'next' ? _ServiceGroup.upcoming : _ServiceGroup.due;
+
     _model.searchFieldTextController ??= TextEditingController();
     _model.searchFieldFocusNode ??= FocusNode();
   }
-         
+
   @override
   void dispose() {
     _model.dispose();
@@ -264,7 +469,9 @@ class _FilterWidgetState extends State<FilterWidget> {
                         children: [
                           Text(
                             'Filter vehicles by type and number',
-                            style: FlutterFlowTheme.of(context).titleMedium.override(
+                            style: FlutterFlowTheme.of(context)
+                                .titleMedium
+                                .override(
                                   font: GoogleFonts.poppins(
                                     fontWeight: FontWeight.w600,
                                     fontStyle: FlutterFlowTheme.of(context)
@@ -411,34 +618,34 @@ class _FilterWidgetState extends State<FilterWidget> {
                           );
                         }
 
-                        final searchQuery = _model.searchFieldTextController.text
+                        final searchQuery = _model
+                            .searchFieldTextController.text
                             .toLowerCase()
                             .trim();
-                        final filteredRecords = snapshot.data!
-                            .where((record) {
-                              final matchesType =
-                                  _model.selectedVehicleType == 'All' ||
-                                      record.carBike ==
-                                          _model.selectedVehicleType;
-                              final matchesSearch = searchQuery.isEmpty ||
-                                  record.vechileNo
-                                      .toLowerCase()
-                                      .contains(searchQuery) ||
-                                  record.mobile
-                                      .toLowerCase()
-                                      .contains(searchQuery) ||
-                                  record.carBike
-                                      .toLowerCase()
-                                      .contains(searchQuery);
-                              return matchesType && matchesSearch;
-                            })
-                            .toList();
+                        final filteredRecords = snapshot.data!.where((record) {
+                          final matchesType =
+                              _model.selectedVehicleType == 'All' ||
+                                  record.carBike == _model.selectedVehicleType;
+                          final matchesSearch = searchQuery.isEmpty ||
+                              record.vechileNo
+                                  .toLowerCase()
+                                  .contains(searchQuery) ||
+                              record.mobile
+                                  .toLowerCase()
+                                  .contains(searchQuery) ||
+                              record.carBike
+                                  .toLowerCase()
+                                  .contains(searchQuery);
+                          return matchesType && matchesSearch;
+                        }).toList();
 
                         if (filteredRecords.isEmpty) {
                           return Center(
                             child: Text(
                               'No vehicles found',
-                              style: FlutterFlowTheme.of(context).bodyMedium.override(
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
                                     font: GoogleFonts.poppins(
                                       fontWeight: FontWeight.w500,
                                       fontStyle: FlutterFlowTheme.of(context)
@@ -724,566 +931,106 @@ class _FilterWidgetState extends State<FilterWidget> {
                             padding: EdgeInsetsDirectional.fromSTEB(
                                 16.0, 0.0, 16.0, 0.0),
                             child: Container(
-                              constraints: BoxConstraints(
-                                maxWidth: 770.0,
-                              ),
+                              constraints: BoxConstraints(maxWidth: 770.0),
                               decoration: BoxDecoration(
-                                color: Color(0xFF454545),
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(12.0),
-                                  bottomRight: Radius.circular(12.0),
-                                  topLeft: Radius.circular(12.0),
-                                  topRight: Radius.circular(12.0),
-                                ),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16.0),
+                                border: Border.all(color: Color(0xFFE6E6E6)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0x0D000000),
+                                    blurRadius: 16.0,
+                                    offset: Offset(0.0, 5.0),
+                                  ),
+                                ],
                               ),
                               child: Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
-                                    16.0, 12.0, 16.0, 0.0),
+                                    12.0, 12.0, 12.0, 12.0),
                                 child: Column(
-                                  mainAxisSize: MainAxisSize.max,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Text(
-                                          'Filter Customers ',
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                font: GoogleFonts.interTight(
+                                    Text(
+                                      'Filter Services',
+                                      style: FlutterFlowTheme.of(context)
+                                          .titleMedium
+                                          .override(
+                                            font: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w600,
+                                              fontStyle:
+                                                  FlutterFlowTheme.of(context)
+                                                      .titleMedium
+                                                      .fontStyle,
+                                            ),
+                                            color: Color(0xFF202020),
+                                            letterSpacing: 0.0,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                    ),
+                                    SizedBox(height: 10.0),
+                                    if (!_isLegacyGroupLocked)
+                                      SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Row(
+                                          children: [
+                                            _buildLegacyGroupChip(
+                                                context, _ServiceGroup.due),
+                                            SizedBox(width: 8.0),
+                                            _buildLegacyGroupChip(context,
+                                                _ServiceGroup.upcoming),
+                                            SizedBox(width: 8.0),
+                                            _buildLegacyGroupChip(context,
+                                                _ServiceGroup.completed),
+                                          ],
+                                        ),
+                                      ),
+                                    if (_isLegacyGroupLocked)
+                                      Row(
+                                        children: [
+                                          Container(
+                                            width: 8.0,
+                                            height: 8.0,
+                                            decoration: BoxDecoration(
+                                              color: _groupColor(
+                                                  _activeLegacyGroup),
+                                              shape: BoxShape.circle,
+                                            ),
+                                          ),
+                                          SizedBox(width: 8.0),
+                                          Text(
+                                            _groupTitle(_activeLegacyGroup),
+                                            style: FlutterFlowTheme.of(context)
+                                                .bodySmall
+                                                .override(
+                                                  font: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontStyle:
+                                                        FlutterFlowTheme.of(
+                                                                context)
+                                                            .bodySmall
+                                                            .fontStyle,
+                                                  ),
+                                                  color: _groupColor(
+                                                      _activeLegacyGroup),
+                                                  letterSpacing: 0.0,
                                                   fontWeight: FontWeight.w600,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
                                                 ),
-                                                color: Colors.white,
-                                                fontSize: 20.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w600,
-                                                fontStyle:
-                                                    FlutterFlowTheme.of(context)
-                                                        .bodyMedium
-                                                        .fontStyle,
-                                              ),
-                                        ),
-                                      ],
-                                    ),
-                                    if (widget.service == null ||
-                                        widget.service == 'due')
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          InkWell(
-                                            splashColor: Colors.transparent,
-                                            focusColor: Colors.transparent,
-                                            hoverColor: Colors.transparent,
-                                            highlightColor: Colors.transparent,
-                                            onTap: () async {
-                                              context.pushNamed(
-                                                FilterShowWidget.routeName,
-                                                queryParameters: {
-                                                  'today': serializeParam(
-                                                    'Today',
-                                                    ParamType.String,
-                                                  ),
-                                                }.withoutNulls,
-                                              );
-                                            },
-                                            child: Text(
-                                              'Today Service Due',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    font:
-                                                        GoogleFonts.interTight(
-                                                      fontWeight:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontWeight,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontStyle,
-                                                    ),
-                                                    color: Colors.white,
-                                                    fontSize: 16.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                            ),
                                           ),
                                         ],
                                       ),
-                                    if (widget.service == null ||
-                                        widget.service == 'due')
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          InkWell(
-                                            splashColor: Colors.transparent,
-                                            focusColor: Colors.transparent,
-                                            hoverColor: Colors.transparent,
-                                            highlightColor: Colors.transparent,
-                                            onTap: () async {
-                                              context.pushNamed(
-                                                FilterShowWidget.routeName,
-                                                queryParameters: {
-                                                  'today': serializeParam(
-                                                    'Yesterday',
-                                                    ParamType.String,
-                                                  ),
-                                                }.withoutNulls,
-                                              );
-                                            },
-                                            child: Text(
-                                              'Due Service Yesterday ',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    font:
-                                                        GoogleFonts.interTight(
-                                                      fontWeight:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontWeight,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontStyle,
-                                                    ),
-                                                    color: Colors.white,
-                                                    fontSize: 16.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                            ),
+                                    SizedBox(height: 12.0),
+                                    ..._groupItems(_activeLegacyGroup)
+                                        .map(
+                                          (item) =>
+                                              _buildLegacyFilterOptionTile(
+                                            context,
+                                            _activeLegacyGroup,
+                                            item,
                                           ),
-                                        ],
-                                      ),
-                                    if (widget.service == null ||
-                                        widget.service == 'due')
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          InkWell(
-                                            splashColor: Colors.transparent,
-                                            focusColor: Colors.transparent,
-                                            hoverColor: Colors.transparent,
-                                            highlightColor: Colors.transparent,
-                                            onTap: () async {
-                                              context.pushNamed(
-                                                FilterShowWidget.routeName,
-                                                queryParameters: {
-                                                  'today': serializeParam(
-                                                    'Last 7 Days',
-                                                    ParamType.String,
-                                                  ),
-                                                }.withoutNulls,
-                                              );
-                                            },
-                                            child: Text(
-                                              'Due Service Last 7 Days',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    font:
-                                                        GoogleFonts.interTight(
-                                                      fontWeight:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontWeight,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontStyle,
-                                                    ),
-                                                    color: Colors.white,
-                                                    fontSize: 16.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    if (widget.service == null ||
-                                        widget.service == 'due')
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          InkWell(
-                                            splashColor: Colors.transparent,
-                                            focusColor: Colors.transparent,
-                                            hoverColor: Colors.transparent,
-                                            highlightColor: Colors.transparent,
-                                            onTap: () async {
-                                              context.pushNamed(
-                                                FilterShowWidget.routeName,
-                                                queryParameters: {
-                                                  'today': serializeParam(
-                                                    ' Last 30 Days',
-                                                    ParamType.String,
-                                                  ),
-                                                }.withoutNulls,
-                                              );
-                                            },
-                                            child: Text(
-                                              'Due Service Last 30 Days',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    font:
-                                                        GoogleFonts.interTight(
-                                                      fontWeight:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontWeight,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontStyle,
-                                                    ),
-                                                    color: Colors.white,
-                                                    fontSize: 16.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    if (widget.service == null ||
-                                        widget.service == 'next')
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          InkWell(
-                                            splashColor: Colors.transparent,
-                                            focusColor: Colors.transparent,
-                                            hoverColor: Colors.transparent,
-                                            highlightColor: Colors.transparent,
-                                            onTap: () async {
-                                              context.pushNamed(
-                                                FilterShowWidget.routeName,
-                                                queryParameters: {
-                                                  'today': serializeParam(
-                                                    'Service Next 7 Days',
-                                                    ParamType.String,
-                                                  ),
-                                                }.withoutNulls,
-                                              );
-                                            },
-                                            child: Text(
-                                              'Service Next 7 Days',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    font:
-                                                        GoogleFonts.interTight(
-                                                      fontWeight:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontWeight,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontStyle,
-                                                    ),
-                                                    color: Colors.white,
-                                                    fontSize: 16.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    if (widget.service == null ||
-                                        widget.service == 'next')
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        children: [
-                                          InkWell(
-                                            splashColor: Colors.transparent,
-                                            focusColor: Colors.transparent,
-                                            hoverColor: Colors.transparent,
-                                            highlightColor: Colors.transparent,
-                                            onTap: () async {
-                                              context.pushNamed(
-                                                FilterShowWidget.routeName,
-                                                queryParameters: {
-                                                  'today': serializeParam(
-                                                    'Service Next 30 Days',
-                                                    ParamType.String,
-                                                  ),
-                                                }.withoutNulls,
-                                              );
-                                            },
-                                            child: Text(
-                                              'Service Next 30 Days',
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    font:
-                                                        GoogleFonts.interTight(
-                                                      fontWeight:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontWeight,
-                                                      fontStyle:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .bodyMedium
-                                                              .fontStyle,
-                                                    ),
-                                                    color: Colors.white,
-                                                    fontSize: 16.0,
-                                                    letterSpacing: 0.0,
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        InkWell(
-                                          splashColor: Colors.transparent,
-                                          focusColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          highlightColor: Colors.transparent,
-                                          onTap: () async {
-                                            context.pushNamed(
-                                              FilterShowWidget.routeName,
-                                              queryParameters: {
-                                                'today': serializeParam(
-                                                  'Service Complete Yesterday',
-                                                  ParamType.String,
-                                                ),
-                                              }.withoutNulls,
-                                            );
-                                          },
-                                          child: Text(
-                                            'Service Complete Yesterday ',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  font: GoogleFonts.interTight(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                                  color: Colors.white,
-                                                  fontSize: 16.0,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        InkWell(
-                                          splashColor: Colors.transparent,
-                                          focusColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          highlightColor: Colors.transparent,
-                                          onTap: () async {
-                                            context.pushNamed(
-                                              FilterShowWidget.routeName,
-                                              queryParameters: {
-                                                'today': serializeParam(
-                                                  'Service Complete Last 7 Days',
-                                                  ParamType.String,
-                                                ),
-                                              }.withoutNulls,
-                                            );
-                                          },
-                                          child: Text(
-                                            'Service Complete Last 7 Days',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  font: GoogleFonts.interTight(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                                  color: Colors.white,
-                                                  fontSize: 16.0,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        InkWell(
-                                          splashColor: Colors.transparent,
-                                          focusColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          highlightColor: Colors.transparent,
-                                          onTap: () async {
-                                            context.pushNamed(
-                                              FilterShowWidget.routeName,
-                                              queryParameters: {
-                                                'today': serializeParam(
-                                                  'Service Complete Last 30 Days',
-                                                  ParamType.String,
-                                                ),
-                                              }.withoutNulls,
-                                            );
-                                          },
-                                          child: Text(
-                                            'Service Complete Last 30 Days',
-                                            style: FlutterFlowTheme.of(context)
-                                                .bodyMedium
-                                                .override(
-                                                  font: GoogleFonts.interTight(
-                                                    fontWeight:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontWeight,
-                                                    fontStyle:
-                                                        FlutterFlowTheme.of(
-                                                                context)
-                                                            .bodyMedium
-                                                            .fontStyle,
-                                                  ),
-                                                  color: Colors.white,
-                                                  fontSize: 16.0,
-                                                  letterSpacing: 0.0,
-                                                  fontWeight:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontWeight,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ]
-                                      .divide(SizedBox(height: 12.0))
-                                      .addToEnd(SizedBox(height: 32.0)),
+                                        )
+                                        .toList()
+                                        .divide(SizedBox(height: 10.0)),
+                                  ],
                                 ),
                               ),
                             ),
