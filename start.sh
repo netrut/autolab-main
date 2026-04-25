@@ -3,7 +3,9 @@
 #  Autolab — Start Web Server
 #  Run every time: bash start.sh
 # ─────────────────────────────────────────────
-
+#chmod +x /workspaces/autolab-main/start.sh
+#./start.sh
+#
 FLUTTER_BIN="/workspaces/autolab-main/flutter/bin"
 BUILD_DIR="/workspaces/autolab-main/build/web"
 
@@ -13,15 +15,30 @@ export PATH="$PATH:$FLUTTER_BIN"
 # Kill any existing server on port 8080
 fuser -k 8080/tcp 2>/dev/null && echo "Stopped previous server on port 8080" || true
 
-# Rebuild if source changed since last build
-if [ "$1" == "--rebuild" ]; then
-  echo "▶ Rebuilding Flutter web app..."
-  cd /workspaces/autolab-main && flutter build web --release
-fi
-
 # Check build exists
 if [ ! -d "$BUILD_DIR" ]; then
   echo "⚠ No build found. Running full build first..."
+  cd /workspaces/autolab-main && flutter build web --release
+fi
+
+# Rebuild when explicitly requested OR when source files are newer than build.
+NEEDS_REBUILD=0
+
+if [ "$1" == "--rebuild" ]; then
+  NEEDS_REBUILD=1
+else
+  BUILD_STAMP="$BUILD_DIR/main.dart.js"
+  if [ ! -f "$BUILD_STAMP" ]; then
+    NEEDS_REBUILD=1
+  else
+    if [ -n "$(find /workspaces/autolab-main/lib /workspaces/autolab-main/assets /workspaces/autolab-main/web /workspaces/autolab-main/pubspec.yaml -newer "$BUILD_STAMP" 2>/dev/null | head -n 1)" ]; then
+      NEEDS_REBUILD=1
+    fi
+  fi
+fi
+
+if [ "$NEEDS_REBUILD" -eq 1 ]; then
+  echo "▶ Rebuilding Flutter web app..."
   cd /workspaces/autolab-main && flutter build web --release
 fi
 

@@ -1,4 +1,5 @@
 import '/backend/backend.dart';
+import '/components/main_bottom_nav_bar.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -74,6 +75,9 @@ class _SearchWidgetState extends State<SearchWidget> {
             actions: [],
             elevation: 1.0,
           ),
+        ),
+        bottomNavigationBar: MainBottomNavBar(
+          currentIndex: 2,
         ),
         body: SingleChildScrollView(
           child: Column(

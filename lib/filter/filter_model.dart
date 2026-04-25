@@ -13,6 +13,7 @@ class FilterModel extends FlutterFlowModel<FilterWidget> {
   TextEditingController? searchFieldTextController;
   String? Function(BuildContext, String?)? searchFieldTextControllerValidator;
   List<BikeServiceRecord> simpleSearchResults = [];
+  String selectedVehicleType = 'All';
 
   @override
   void initState(BuildContext context) {}
