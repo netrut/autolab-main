@@ -172,6 +172,10 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
                       'service',
                       ParamType.String,
                     ),
+                    mode: params.getParam(
+                      'mode',
+                      ParamType.String,
+                    ),
                   ),
                 )),
         FFRoute(

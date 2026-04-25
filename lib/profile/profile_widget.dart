@@ -1,4 +1,5 @@
 import '/backend/backend.dart';
+import '/components/main_bottom_nav_bar.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -97,6 +98,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                 centerTitle: false,
                 elevation: 0.0,
               ),
+            ),
+            bottomNavigationBar: MainBottomNavBar(
+              currentIndex: 4,
             ),
             body: SafeArea(
               top: true,
