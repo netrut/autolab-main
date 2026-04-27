@@ -56,23 +56,23 @@ class _HomeWidgetState extends State<HomeWidget> {
           ],
         ),
         child: Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(14.0, 14.0, 14.0, 14.0),
+          padding: EdgeInsetsDirectional.fromSTEB(8.0, 10.0, 8.0, 10.0),
           child: Row(
             children: [
               Container(
-                width: 54.0,
-                height: 54.0,
+                width: 48.0,
+                height: 48.0,
                 decoration: BoxDecoration(
                   color: Color(0xFFF2F2F2),
-                  borderRadius: BorderRadius.circular(14.0),
+                  borderRadius: BorderRadius.circular(12.0),
                 ),
                 child: Icon(
                   icon,
                   color: Color(0xFF1F1F1F),
-                  size: 28.0,
+                  size: 24.0,
                 ),
               ),
-              SizedBox(width: 12.0),
+              SizedBox(width: 8.0),
               Expanded(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -283,7 +283,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                   SizedBox(height: 14.0),
                   FFButtonWidget(
                     onPressed: onTap,
-                    text: 'Book Now',
+                    text: 'Call Now',
                     options: FFButtonOptions(
                       height: 32.0,
                       padding:
@@ -1090,12 +1090,10 @@ class _HomeWidgetState extends State<HomeWidget> {
                                   .override(
                                     font: GoogleFonts.poppins(
                                       fontWeight: FontWeight.w700,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .headlineSmall
-                                          .fontStyle,
+                                      fontStyle: FontStyle.italic,
                                     ),
                                     color: Color(0xFF1E1E1E),
-                                    fontSize: 34.0,
+                                    fontSize: 24.0,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -1194,7 +1192,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                                             borderRadius:
                                                 BorderRadius.circular(8.0),
                                             child: Image.asset(
-                                              'assets/images/two-wheeler.png',
+                                              'assets/images/carApp2.png',
                                               height: 38.0,
                                               fit: BoxFit.contain,
                                             ),

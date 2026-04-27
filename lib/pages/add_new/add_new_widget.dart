@@ -31,6 +31,7 @@ class _AddNewWidgetState extends State<AddNewWidget> {
   late AddNewModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  String? _selectedVehicleType;
 
   @override
   void initState() {
@@ -49,6 +50,22 @@ class _AddNewWidgetState extends State<AddNewWidget> {
     _model.dispose();
 
     super.dispose();
+  }
+
+  Query _buildVehicleQuery() {
+    Query query = VechileDetailsRecord.collection.where(
+      'mobile',
+      isNotEqualTo: currentPhoneNumber,
+    );
+    
+    if (_selectedVehicleType != null) {
+      query = query.where(
+        'carBike',
+        isEqualTo: _selectedVehicleType,
+      );
+    }
+    
+    return query;
   }
 
   @override
@@ -930,37 +947,7 @@ class _AddNewWidgetState extends State<AddNewWidget> {
                                           .asValidator(context),
                                     ),
                                   ),
-                                  InkWell(
-                                    splashColor: Colors.transparent,
-                                    focusColor: Colors.transparent,
-                                    hoverColor: Colors.transparent,
-                                    highlightColor: Colors.transparent,
-                                    onTap: () async {
-                                      context.pushNamed(
-                                        FilterWidget.routeName,
-                                        queryParameters: {
-                                          'mode': serializeParam(
-                                            'vehicle',
-                                            ParamType.String,
-                                          ),
-                                        }.withoutNulls,
-                                      );
-                                    },
-                                    child: Container(
-                                      width: 32.0,
-                                      height: 32.0,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFFE3E3E3),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      child: Icon(
-                                        Icons.tune_rounded,
-                                        color: Color(0xFF2A2A2A),
-                                        size: 18.0,
-                                      ),
-                                    ),
-                                  ),
+
                                 ],
                               ),
                             ),
@@ -999,15 +986,107 @@ class _AddNewWidgetState extends State<AddNewWidget> {
                       ],
                     ),
                     SizedBox(height: 14.0),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 10.0, 0.0),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                              child: FilterChip(
+                                label: Text(
+                                  'All',
+                                  style: FlutterFlowTheme.of(context).bodySmall.override(
+                                    font: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    color: _selectedVehicleType == null ? Colors.white : Color(0xFF7A7A7A),
+                                    letterSpacing: 0.0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                selected: _selectedVehicleType == null,
+                                onSelected: (_) {
+                                  safeSetState(() {
+                                    _selectedVehicleType = null;
+                                    _model.listViewPagingController2?.refresh();
+                                  });
+                                },
+                                backgroundColor: Colors.white,
+                                selectedColor: Color(0xFF2F9E56),
+                                side: BorderSide(
+                                  color: _selectedVehicleType == null ? Color(0xFF2F9E56) : Color(0xFFDCDCDC),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                              child: FilterChip(
+                                label: Text(
+                                  'Car',
+                                  style: FlutterFlowTheme.of(context).bodySmall.override(
+                                    font: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    color: _selectedVehicleType == 'Car' ? Colors.white : Color(0xFF7A7A7A),
+                                    letterSpacing: 0.0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                selected: _selectedVehicleType == 'Car',
+                                onSelected: (_) {
+                                  safeSetState(() {
+                                    _selectedVehicleType = 'Car';
+                                    _model.listViewPagingController2?.refresh();
+                                  });
+                                },
+                                backgroundColor: Colors.white,
+                                selectedColor: Color(0xFF2F9E56),
+                                side: BorderSide(
+                                  color: _selectedVehicleType == 'Car' ? Color(0xFF2F9E56) : Color(0xFFDCDCDC),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+                              child: FilterChip(
+                                label: Text(
+                                  'Bike',
+                                  style: FlutterFlowTheme.of(context).bodySmall.override(
+                                    font: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    color: _selectedVehicleType == 'Bike' ? Colors.white : Color(0xFF7A7A7A),
+                                    letterSpacing: 0.0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                selected: _selectedVehicleType == 'Bike',
+                                onSelected: (_) {
+                                  safeSetState(() {
+                                    _selectedVehicleType = 'Bike';
+                                    _model.listViewPagingController2?.refresh();
+                                  });
+                                },
+                                backgroundColor: Colors.white,
+                                selectedColor: Color(0xFF2F9E56),
+                                side: BorderSide(
+                                  color: _selectedVehicleType == 'Bike' ? Color(0xFF2F9E56) : Color(0xFFDCDCDC),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 14.0),
                     Expanded(
                       child: AuthUserStreamWidget(
                         builder: (context) => PagedListView<
                             DocumentSnapshot<Object?>?, VechileDetailsRecord>(
                           pagingController: _model.setListViewController2(
-                            VechileDetailsRecord.collection.where(
-                              'mobile',
-                              isNotEqualTo: currentPhoneNumber,
-                            ),
+                            _buildVehicleQuery(),
                           ),
                           padding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 0.0, 0.0, 20.0),
@@ -1270,7 +1349,7 @@ class _AddNewWidgetState extends State<AddNewWidget> {
                                                         },
                                                       );
                                                     },
-                                                    text: 'Add Service',
+                                                    text: 'Add Vehicle',
                                                     options: FFButtonOptions(
                                                       height: 34.0,
                                                       padding:

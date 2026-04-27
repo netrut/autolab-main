@@ -78,7 +78,7 @@ class _ProfileUpdateWidgetState extends State<ProfileUpdateWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+        backgroundColor: Color(0xFFF3F3F3),
         drawer: Drawer(
           elevation: 16.0,
           child: Container(
@@ -636,91 +636,83 @@ class _ProfileUpdateWidgetState extends State<ProfileUpdateWidget> {
           ),
         ),
         appBar: AppBar(
-          backgroundColor: Color(0xFFFDFDFD),
-          iconTheme: IconThemeData(color: Colors.black),
+          backgroundColor: Color(0xFFF3F3F3),
+          iconTheme: IconThemeData(color: Color(0xFF2A2A2A)),
           automaticallyImplyLeading: true,
+          title: Text(
+            'UPDATE PROFILE',
+            style: FlutterFlowTheme.of(context).titleMedium.override(
+                  font: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w700,
+                    fontStyle:
+                        FlutterFlowTheme.of(context).titleMedium.fontStyle,
+                  ),
+                  color: Color(0xFF1F1F1F),
+                  letterSpacing: 0.8,
+                  fontWeight: FontWeight.w700,
+                ),
+          ),
           actions: [],
           centerTitle: true,
           elevation: 0.0,
         ),
         body: SafeArea(
           top: true,
-          child: Align(
-            alignment: AlignmentDirectional(0.0, 0.0),
-            child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(24.0, 24.0, 24.0, 24.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                      child: Container(
-                        height: 60.0,
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                      child: Text(
-                        'Update Profile',
-                        style: FlutterFlowTheme.of(context)
-                            .headlineMedium
-                            .override(
-                              font: GoogleFonts.interTight(
-                                fontWeight: FontWeight.w600,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .headlineMedium
-                                    .fontStyle,
+          child: Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(10.0, 6.0, 10.0, 0.0),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(2.0, 2.0, 2.0, 2.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Update Profile',
+                          style: FlutterFlowTheme.of(context)
+                              .headlineSmall
+                              .override(
+                                font: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w700,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .headlineSmall
+                                      .fontStyle,
+                                ),
+                                color: Color(0xFF1E1E1E),
+                                fontSize: 30.0,
+                                letterSpacing: 0.0,
+                                fontWeight: FontWeight.w700,
                               ),
-                              letterSpacing: 0.0,
-                              fontWeight: FontWeight.w600,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .headlineMedium
-                                  .fontStyle,
-                            ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                      child: Text(
-                        'Please fill in your details to update profile',
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              font: GoogleFonts.interTight(
-                                fontWeight: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontWeight,
-                                fontStyle: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .fontStyle,
+                        ),
+                        Text(
+                          'Fill in your details to update your profile',
+                          style: FlutterFlowTheme.of(context)
+                              .bodyMedium
+                              .override(
+                                font: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w500,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontStyle,
+                                ),
+                                color: Color(0xFF7A7A7A),
+                                letterSpacing: 0.0,
                               ),
-                              color: FlutterFlowTheme.of(context).secondaryText,
-                              letterSpacing: 0.0,
-                              fontWeight: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontWeight,
-                              fontStyle: FlutterFlowTheme.of(context)
-                                  .bodyMedium
-                                  .fontStyle,
-                            ),
-                      ),
+                        ),
+                      ],
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                      child: Container(
-                        height: 24.0,
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
+                  ),
+                  SizedBox(height: 20.0),
+                  Padding(
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(2.0, 0.0, 2.0, 0.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
                           TextFormField(
                             controller: _model.addressTextController,
                             focusNode: _model.addressFocusNode,
@@ -732,53 +724,39 @@ class _ProfileUpdateWidgetState extends State<ProfileUpdateWidget> {
                               labelStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
-                                    font: GoogleFonts.interTight(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
+                                    font: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w500,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .labelMedium
                                           .fontStyle,
                                     ),
+                                    color: Color(0xFF8A8A8A),
                                     letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontStyle,
                                   ),
-                              hintText: 'Address',
+                              hintText: 'Enter address',
                               hintStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
-                                    font: GoogleFonts.interTight(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
+                                    font: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w400,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .labelMedium
                                           .fontStyle,
                                     ),
+                                    color: Color(0xFF8A8A8A),
                                     letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontStyle,
                                   ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: Color(0x00000000),
+                                  color: Color(0xFFDCDCDC),
                                   width: 1.0,
                                 ),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: Color(0x00000000),
-                                  width: 1.0,
+                                  color: Color(0xFF2F7DE1),
+                                  width: 1.5,
                                 ),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
@@ -792,32 +770,24 @@ class _ProfileUpdateWidgetState extends State<ProfileUpdateWidget> {
                               focusedErrorBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: FlutterFlowTheme.of(context).error,
-                                  width: 1.0,
+                                  width: 1.5,
                                 ),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               filled: true,
-                              fillColor: FlutterFlowTheme.of(context)
-                                  .secondaryBackground,
+                              fillColor: Color(0xFFFEFEFE),
                             ),
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
                                 .override(
-                                  font: GoogleFonts.interTight(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
+                                  font: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w500,
                                     fontStyle: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .fontStyle,
                                   ),
+                                  color: Color(0xFF2B2B2B),
                                   letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
                                 ),
                             cursorColor:
                                 FlutterFlowTheme.of(context).primaryText,
@@ -835,53 +805,39 @@ class _ProfileUpdateWidgetState extends State<ProfileUpdateWidget> {
                               labelStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
-                                    font: GoogleFonts.interTight(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
+                                    font: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w500,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .labelMedium
                                           .fontStyle,
                                     ),
+                                    color: Color(0xFF8A8A8A),
                                     letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontStyle,
                                   ),
-                              hintText: 'Area',
+                              hintText: 'Enter area',
                               hintStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
-                                    font: GoogleFonts.interTight(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
+                                    font: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w400,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .labelMedium
                                           .fontStyle,
                                     ),
+                                    color: Color(0xFF8A8A8A),
                                     letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontStyle,
                                   ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: Color(0x00000000),
+                                  color: Color(0xFFDCDCDC),
                                   width: 1.0,
                                 ),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: Color(0x00000000),
-                                  width: 1.0,
+                                  color: Color(0xFF2F7DE1),
+                                  width: 1.5,
                                 ),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
@@ -895,32 +851,24 @@ class _ProfileUpdateWidgetState extends State<ProfileUpdateWidget> {
                               focusedErrorBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: FlutterFlowTheme.of(context).error,
-                                  width: 1.0,
+                                  width: 1.5,
                                 ),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               filled: true,
-                              fillColor: FlutterFlowTheme.of(context)
-                                  .secondaryBackground,
+                              fillColor: Color(0xFFFEFEFE),
                             ),
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
                                 .override(
-                                  font: GoogleFonts.interTight(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
+                                  font: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w500,
                                     fontStyle: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .fontStyle,
                                   ),
+                                  color: Color(0xFF2B2B2B),
                                   letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
                                 ),
                             cursorColor:
                                 FlutterFlowTheme.of(context).primaryText,
@@ -938,53 +886,39 @@ class _ProfileUpdateWidgetState extends State<ProfileUpdateWidget> {
                               labelStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
-                                    font: GoogleFonts.interTight(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
+                                    font: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w500,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .labelMedium
                                           .fontStyle,
                                     ),
+                                    color: Color(0xFF8A8A8A),
                                     letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontStyle,
                                   ),
-                              hintText: 'City',
+                              hintText: 'Enter city',
                               hintStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
-                                    font: GoogleFonts.interTight(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
+                                    font: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w400,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .labelMedium
                                           .fontStyle,
                                     ),
+                                    color: Color(0xFF8A8A8A),
                                     letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontStyle,
                                   ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: Color(0x00000000),
+                                  color: Color(0xFFDCDCDC),
                                   width: 1.0,
                                 ),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: Color(0x00000000),
-                                  width: 1.0,
+                                  color: Color(0xFF2F7DE1),
+                                  width: 1.5,
                                 ),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
@@ -998,32 +932,24 @@ class _ProfileUpdateWidgetState extends State<ProfileUpdateWidget> {
                               focusedErrorBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: FlutterFlowTheme.of(context).error,
-                                  width: 1.0,
+                                  width: 1.5,
                                 ),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               filled: true,
-                              fillColor: FlutterFlowTheme.of(context)
-                                  .secondaryBackground,
+                              fillColor: Color(0xFFFEFEFE),
                             ),
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
                                 .override(
-                                  font: GoogleFonts.interTight(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
+                                  font: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w500,
                                     fontStyle: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .fontStyle,
                                   ),
+                                  color: Color(0xFF2B2B2B),
                                   letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
                                 ),
                             cursorColor:
                                 FlutterFlowTheme.of(context).primaryText,
@@ -1041,53 +967,39 @@ class _ProfileUpdateWidgetState extends State<ProfileUpdateWidget> {
                               labelStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
-                                    font: GoogleFonts.interTight(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
+                                    font: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w500,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .labelMedium
                                           .fontStyle,
                                     ),
+                                    color: Color(0xFF8A8A8A),
                                     letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontStyle,
                                   ),
-                              hintText: 'GST No.',
+                              hintText: 'Enter GST number',
                               hintStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
-                                    font: GoogleFonts.interTight(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
+                                    font: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w400,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .labelMedium
                                           .fontStyle,
                                     ),
+                                    color: Color(0xFF8A8A8A),
                                     letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontStyle,
                                   ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: Color(0x00000000),
+                                  color: Color(0xFFDCDCDC),
                                   width: 1.0,
                                 ),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: Color(0x00000000),
-                                  width: 1.0,
+                                  color: Color(0xFF2F7DE1),
+                                  width: 1.5,
                                 ),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
@@ -1101,32 +1013,24 @@ class _ProfileUpdateWidgetState extends State<ProfileUpdateWidget> {
                               focusedErrorBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: FlutterFlowTheme.of(context).error,
-                                  width: 1.0,
+                                  width: 1.5,
                                 ),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               filled: true,
-                              fillColor: FlutterFlowTheme.of(context)
-                                  .secondaryBackground,
+                              fillColor: Color(0xFFFEFEFE),
                             ),
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
                                 .override(
-                                  font: GoogleFonts.interTight(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
+                                  font: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w500,
                                     fontStyle: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .fontStyle,
                                   ),
+                                  color: Color(0xFF2B2B2B),
                                   letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
                                 ),
                             cursorColor:
                                 FlutterFlowTheme.of(context).primaryText,
@@ -1144,53 +1048,39 @@ class _ProfileUpdateWidgetState extends State<ProfileUpdateWidget> {
                               labelStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
-                                    font: GoogleFonts.interTight(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
+                                    font: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w500,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .labelMedium
                                           .fontStyle,
                                     ),
+                                    color: Color(0xFF8A8A8A),
                                     letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontStyle,
                                   ),
-                              hintText: 'Location',
+                              hintText: 'Enter location',
                               hintStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
-                                    font: GoogleFonts.interTight(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
+                                    font: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w400,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .labelMedium
                                           .fontStyle,
                                     ),
+                                    color: Color(0xFF8A8A8A),
                                     letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontStyle,
                                   ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: Color(0x00000000),
+                                  color: Color(0xFFDCDCDC),
                                   width: 1.0,
                                 ),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: Color(0x00000000),
-                                  width: 1.0,
+                                  color: Color(0xFF2F7DE1),
+                                  width: 1.5,
                                 ),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
@@ -1204,32 +1094,24 @@ class _ProfileUpdateWidgetState extends State<ProfileUpdateWidget> {
                               focusedErrorBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: FlutterFlowTheme.of(context).error,
-                                  width: 1.0,
+                                  width: 1.5,
                                 ),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               filled: true,
-                              fillColor: FlutterFlowTheme.of(context)
-                                  .secondaryBackground,
+                              fillColor: Color(0xFFFEFEFE),
                             ),
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
                                 .override(
-                                  font: GoogleFonts.interTight(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
+                                  font: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w500,
                                     fontStyle: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .fontStyle,
                                   ),
+                                  color: Color(0xFF2B2B2B),
                                   letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
                                 ),
                             cursorColor:
                                 FlutterFlowTheme.of(context).primaryText,
@@ -1247,53 +1129,39 @@ class _ProfileUpdateWidgetState extends State<ProfileUpdateWidget> {
                               labelStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
-                                    font: GoogleFonts.interTight(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
+                                    font: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w500,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .labelMedium
                                           .fontStyle,
                                     ),
+                                    color: Color(0xFF8A8A8A),
                                     letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontStyle,
                                   ),
-                              hintText: 'Pin',
+                              hintText: 'Enter pin code',
                               hintStyle: FlutterFlowTheme.of(context)
                                   .labelMedium
                                   .override(
-                                    font: GoogleFonts.interTight(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
+                                    font: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w400,
                                       fontStyle: FlutterFlowTheme.of(context)
                                           .labelMedium
                                           .fontStyle,
                                     ),
+                                    color: Color(0xFF8A8A8A),
                                     letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontStyle,
                                   ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: Color(0x00000000),
+                                  color: Color(0xFFDCDCDC),
                                   width: 1.0,
                                 ),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: Color(0x00000000),
-                                  width: 1.0,
+                                  color: Color(0xFF2F7DE1),
+                                  width: 1.5,
                                 ),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
@@ -1307,32 +1175,24 @@ class _ProfileUpdateWidgetState extends State<ProfileUpdateWidget> {
                               focusedErrorBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: FlutterFlowTheme.of(context).error,
-                                  width: 1.0,
+                                  width: 1.5,
                                 ),
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               filled: true,
-                              fillColor: FlutterFlowTheme.of(context)
-                                  .secondaryBackground,
+                              fillColor: Color(0xFFFEFEFE),
                             ),
                             style: FlutterFlowTheme.of(context)
                                 .bodyMedium
                                 .override(
-                                  font: GoogleFonts.interTight(
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .fontWeight,
+                                  font: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w500,
                                     fontStyle: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .fontStyle,
                                   ),
+                                  color: Color(0xFF2B2B2B),
                                   letterSpacing: 0.0,
-                                  fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontWeight,
-                                  fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .fontStyle,
                                 ),
                             cursorColor:
                                 FlutterFlowTheme.of(context).primaryText,
@@ -1342,16 +1202,10 @@ class _ProfileUpdateWidgetState extends State<ProfileUpdateWidget> {
                         ].divide(SizedBox(height: 16.0)),
                       ),
                     ),
+                    SizedBox(height: 20.0),
                     Padding(
                       padding:
-                          EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                      child: Container(
-                        height: 24.0,
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
+                          EdgeInsetsDirectional.fromSTEB(2.0, 0.0, 2.0, 0.0),
                       child: FFButtonWidget(
                         onPressed: () async {
                           await FFAppState()
@@ -1375,52 +1229,33 @@ class _ProfileUpdateWidgetState extends State<ProfileUpdateWidget> {
                               0.0, 0.0, 0.0, 0.0),
                           iconPadding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 0.0, 0.0, 0.0),
-                          color: Color(0xFF040404),
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleSmall.override(
-                                    font: GoogleFonts.interTight(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontStyle,
-                                    ),
-                                    color: FlutterFlowTheme.of(context).info,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .titleSmall
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .titleSmall
-                                        .fontStyle,
-                                  ),
+                          color: Color(0xFF1F1F1F),
+                          textStyle: FlutterFlowTheme.of(context)
+                              .bodyMedium
+                              .override(
+                                font: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w600,
+                                  fontStyle: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .fontStyle,
+                                ),
+                                color: Colors.white,
+                                fontSize: 16.0,
+                                letterSpacing: 0.0,
+                                fontWeight: FontWeight.w600,
+                              ),
                           elevation: 0.0,
-                          borderRadius: BorderRadius.circular(10.0),
+                          borderRadius: BorderRadius.circular(12.0),
                         ),
                       ),
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                      child: Container(
-                        height: 24.0,
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(24.0, 0.0, 24.0, 0.0),
-                      child: Container(
-                        height: 24.0,
-                      ),
-                    ),
+                    SizedBox(height: 20.0),
                   ],
                 ),
               ),
             ),
           ),
         ),
-      ),
     );
   }
 }

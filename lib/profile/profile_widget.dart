@@ -370,6 +370,32 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                                 profileUsersRecord?.area ?? 'N/A',
                               ),
                               SizedBox(height: 24.0),
+
+                              // Service Center Details Section
+                              Align(
+                                alignment: AlignmentDirectional(-1.0, 0.0),
+                                child: Text(
+                                  'Service Center',
+                                  style: FlutterFlowTheme.of(context)
+                                      .titleMedium
+                                      .override(
+                                        font: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                        color: Color(0xFF1F1F1F),
+                                        fontSize: 16.0,
+                                        letterSpacing: 0.0,
+                                      ),
+                                ),
+                              ),
+                              SizedBox(height: 12.0),
+                              _buildInfoCard(
+                                context,
+                                Icons.business_outlined,
+                                'Service Center Name',
+                                profileUsersRecord?.location ?? 'N/A',
+                              ),
+                              SizedBox(height: 24.0),
                             ],
                           ),
                         ),

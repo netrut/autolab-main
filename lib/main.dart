@@ -174,7 +174,7 @@ class NavBarPage extends StatefulWidget {
 
 /// This is the private State class that goes with NavBarPage.
 class _NavBarPageState extends State<NavBarPage> {
-  String _currentPageName = 'Loader';
+  String _currentPageName = 'Home';
   late Widget? _currentPage;
 
   @override
@@ -187,7 +187,9 @@ class _NavBarPageState extends State<NavBarPage> {
   @override
   Widget build(BuildContext context) {
     final tabs = {
-      'Loader': LoaderWidget(),
+      'Home': HomeWidget(),
+      'search': SearchWidget(),
+      'addnew': AddNewWidget(),
       'profile': ProfileWidget(),
     };
     final currentIndex = tabs.keys.toList().indexOf(_currentPageName);
@@ -215,12 +217,22 @@ class _NavBarPageState extends State<NavBarPage> {
         tabs: [
           GButton(
             icon: Icons.home_outlined,
-            text: '',
+            text: 'Home',
+            iconSize: 24.0,
+          ),
+          GButton(
+            icon: Icons.directions_car,
+            text: 'Vehicles',
+            iconSize: 24.0,
+          ),
+          GButton(
+            icon: Icons.add,
+            text: 'Add New',
             iconSize: 24.0,
           ),
           GButton(
             icon: Icons.person,
-            text: '',
+            text: 'Profile',
             iconSize: 24.0,
           )
         ],

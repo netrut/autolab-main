@@ -1,5 +1,4 @@
 import '/backend/backend.dart';
-import '/components/main_bottom_nav_bar.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -15,7 +14,7 @@ class SearchWidget extends StatefulWidget {
   const SearchWidget({super.key});
 
   static String routeName = 'search';
-  static String routePath = '/search';
+  static String routePath = '/search';  
 
   @override
   State<SearchWidget> createState() => _SearchWidgetState();
@@ -23,6 +22,7 @@ class SearchWidget extends StatefulWidget {
 
 class _SearchWidgetState extends State<SearchWidget> {
   late SearchModel _model;
+  String? _selectedDateFilter;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -441,6 +441,151 @@ class _SearchWidgetState extends State<SearchWidget> {
     );
   }
 
+  void _showFilterDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          insetPadding: EdgeInsets.all(20.0),
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            padding: EdgeInsetsDirectional.fromSTEB(20.0, 24.0, 20.0, 24.0),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Filter by Date',
+                    style: GoogleFonts.poppins(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF1F1F1F),
+                    ),
+                  ),
+                  SizedBox(height: 20.0),
+                  // Due Services Section
+                  Text(
+                    'Due Service',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFFDA8A1D),
+                    ),
+                  ),
+                  SizedBox(height: 10.0),
+                  _buildFilterOption('Due Today', 'due_today'),
+                  _buildFilterOption('Due Yesterday', 'due_yesterday'),
+                  _buildFilterOption('Due Last 7 Days', 'due_7days'),
+                  _buildFilterOption('Due Last 30 Days', 'due_30days'),
+                  SizedBox(height: 20.0),
+                  // Upcoming Services Section
+                  Text(
+                    'Upcoming Services',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF2F7DE1),
+                    ),
+                  ),
+                  SizedBox(height: 10.0),
+                  _buildFilterOption('Next 7 Days', 'upcoming_7days'),
+                  _buildFilterOption('Next 30 Days', 'upcoming_30days'),
+                  SizedBox(height: 20.0),
+                  // Service Completed Section
+                  Text(
+                    'Service Completed',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF2F9E56),
+                    ),
+                  ),
+                  SizedBox(height: 10.0),
+                  _buildFilterOption('Completed Yesterday', 'completed_yesterday'),
+                  _buildFilterOption('Completed Last 7 Days', 'completed_7days'),
+                  _buildFilterOption('Completed Last 30 Days', 'completed_30days'),
+                  SizedBox(height: 24.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'Close',
+                          style: GoogleFonts.poppins(
+                            color: Color(0xFF2F7DE1),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildFilterOption(String label, String value) {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 10.0),
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _selectedDateFilter = value;
+          });
+          Navigator.of(context).pop();
+        },
+        child: Container(
+          padding: EdgeInsetsDirectional.fromSTEB(14.0, 12.0, 14.0, 12.0),
+          decoration: BoxDecoration(
+            color: _selectedDateFilter == value ? Color(0xFFF5F5F5) : Colors.white,
+            borderRadius: BorderRadius.circular(10.0),
+            border: Border.all(
+              color: _selectedDateFilter == value 
+                  ? Color(0xFF2F7DE1)
+                  : Color(0xFFDCDCDC),
+              width: _selectedDateFilter == value ? 2.0 : 1.0,
+            ),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  label,
+                  style: GoogleFonts.poppins(
+                    fontSize: 13.0,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF1F1F1F),
+                  ),
+                ),
+              ),
+              if (_selectedDateFilter == value)
+                Icon(
+                  Icons.check_circle,
+                  color: Color(0xFF2F7DE1),
+                  size: 20.0,
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -491,9 +636,9 @@ class _SearchWidgetState extends State<SearchWidget> {
           centerTitle: true,
           elevation: 0.0,
         ),
-        bottomNavigationBar: MainBottomNavBar(
-          currentIndex: 2,
-        ),
+        // bottomNavigationBar: MainBottomNavBar(
+        //   currentIndex: 2,
+        // ),
         body: SafeArea(
           top: true,
           child: Padding(
@@ -627,6 +772,18 @@ class _SearchWidgetState extends State<SearchWidget> {
                             textAlign: TextAlign.start,
                             validator: _model.searchFieldTextControllerValidator
                                 .asValidator(context),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () => _showFilterDialog(context),
+                          child: Padding(
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                8.0, 0.0, 0.0, 0.0),
+                            child: Icon(
+                              Icons.tune_rounded,
+                              color: Color(0xFF2A2A2A),
+                              size: 22.0,
+                            ),
                           ),
                         ),
                       ],
