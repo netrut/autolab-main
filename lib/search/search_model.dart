@@ -9,6 +9,7 @@ class SearchModel extends FlutterFlowModel<SearchWidget> {
   ///  Local state fields for this page.
 
   String searchText = '\"\"';
+  String? selectedServiceFilter; // null = all, 'due', 'upcoming', 'completed'
 
   ///  State fields for stateful widgets in this page.
 
