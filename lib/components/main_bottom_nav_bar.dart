@@ -27,9 +27,6 @@ class MainBottomNavBar extends StatelessWidget {
         context.goNamed(SearchWidget.routeName);
         break;
       case 3:
-        context.goNamed(FilterWidget.routeName);
-        break;
-      case 4:
         context.goNamed(ProfileWidget.routeName);
         break;
     }
@@ -65,10 +62,6 @@ class MainBottomNavBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Icon(Icons.search_rounded),
           label: 'Search',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.miscellaneous_services_rounded),
-          label: 'Services',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person_outline_rounded),

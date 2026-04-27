@@ -4,7 +4,6 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
 import '/index.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,196 +26,419 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Future<void> _seedSearchTestData(BuildContext context) async {
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (dialogContext) {
-        return AlertDialog(
-          title: Text('Seed test data?'),
-          content: Text(
-            'This will add demo vehicles and service entries for filter testing.',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext, false),
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext, true),
-              child: Text('Add Data'),
-            ),
-          ],
+  DateTime get _startOfToday {
+    final now = DateTime.now();
+    return DateTime(now.year, now.month, now.day);
+  }
+
+  String? _getServiceStatusFromDates(Iterable<DateTime?> dates) {
+    final validDates = dates.whereType<DateTime>().toList();
+    if (validDates.isEmpty) {
+      return null;
+    }
+
+    validDates.sort((a, b) => b.compareTo(a));
+    final latest = validDates.first;
+
+    if (latest.isAfter(_startOfToday)) {
+      return 'upcoming';
+    }
+    if (latest.isBefore(_startOfToday.subtract(Duration(days: 30)))) {
+      return 'completed';
+    }
+    return 'due';
+  }
+
+  bool _matchesServiceFilter(String vehicleServiceStatus) {
+    if (_model.selectedServiceFilter == null || _model.selectedServiceFilter == 'all') {
+      return true;
+    }
+    return vehicleServiceStatus == _model.selectedServiceFilter;
+  }
+
+  ({String label, Color bgColor, Color textColor}) _statusTagStyle(
+      String status) {
+    switch (status) {
+      case 'upcoming':
+        return (
+          label: 'Upcoming Service',
+          bgColor: Color(0xFFEAF2FF),
+          textColor: Color(0xFF2F7DE1),
         );
+      case 'completed':
+        return (
+          label: 'Service Completed',
+          bgColor: Color(0xFFE8F7EE),
+          textColor: Color(0xFF2F9E56),
+        );
+      default:
+        return (
+          label: 'Due Service',
+          bgColor: Color(0xFFFFF0DE),
+          textColor: Color(0xFFDA8A1D),
+        );
+    }
+  }
+
+  Color _getFilterBgColor(String? filter) {
+    switch (filter) {
+      case 'due':
+        return Color(0xFFFFF0DE);
+      case 'upcoming':
+        return Color(0xFFEAF2FF);
+      case 'completed':
+        return Color(0xFFE8F7EE);
+      default:
+        return Color(0xFFEFEFEF);
+    }
+  }
+
+  Color _getFilterTextColor(String? filter) {
+    switch (filter) {
+      case 'due':
+        return Color(0xFFDA8A1D);
+      case 'upcoming':
+        return Color(0xFF2F7DE1);
+      case 'completed':
+        return Color(0xFF2F9E56);
+      default:
+        return Color(0xFF2B2B2B);
+    }
+  }
+
+  Widget _buildStatusChip(BuildContext context, String status) {
+    final style = _statusTagStyle(status);
+
+    return Container(
+      padding: EdgeInsetsDirectional.fromSTEB(10.0, 5.0, 10.0, 5.0),
+      decoration: BoxDecoration(
+        color: style.bgColor,
+        borderRadius: BorderRadius.circular(999.0),
+      ),
+      child: Text(
+        style.label,
+        style: FlutterFlowTheme.of(context).bodySmall.override(
+              font: GoogleFonts.poppins(
+                fontWeight: FontWeight.w600,
+                fontStyle: FlutterFlowTheme.of(context).bodySmall.fontStyle,
+              ),
+              color: style.textColor,
+              letterSpacing: 0.0,
+              fontWeight: FontWeight.w600,
+            ),
+      ),
+    );
+  }
+
+  Widget _buildServiceFilterChips(BuildContext context) {
+    final filterOptions = [
+      ('all', 'All Services'),
+      ('due', 'Due Services'),
+      ('upcoming', 'Upcoming Services'),
+      ('completed', 'Service Completed'),
+    ];
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Padding(
+        padding: EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
+        child: Row(
+          children: filterOptions.map((option) {
+            final filterValue = option.$1;
+            final filterLabel = option.$2;
+            final isSelected = _model.selectedServiceFilter == filterValue || 
+                (_model.selectedServiceFilter == null && filterValue == 'all');
+
+            return Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 8.0, 0.0),
+              child: FilterChip(
+                label: Text(
+                  filterLabel,
+                  style: FlutterFlowTheme.of(context).bodySmall.override(
+                        font: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
+                        ),
+                        color: isSelected 
+                            ? _getFilterTextColor(filterValue == 'all' ? null : filterValue)
+                            : Color(0xFF7A7A7A),
+                        letterSpacing: 0.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+                selected: isSelected,
+                onSelected: (_) {
+                  setState(() {
+                    _model.selectedServiceFilter = filterValue == 'all' ? null : filterValue;
+                  });
+                },
+                backgroundColor: Colors.white,
+                selectedColor: _getFilterBgColor(filterValue == 'all' ? null : filterValue),
+                side: BorderSide(
+                  color: isSelected 
+                      ? _getFilterTextColor(filterValue == 'all' ? null : filterValue)
+                      : Color(0xFFDCDCDC),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearchCardWithFilter(
+      BuildContext context, VechileDetailsRecord record) {
+    if (record.carBike == 'Car') {
+      return StreamBuilder<List<CarServiceRecord>>(
+        stream: queryCarServiceRecord(
+          queryBuilder: (carServiceRecord) =>
+              carServiceRecord.where('vechile_no', isEqualTo: record.vechileNo),
+        ),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return SizedBox.shrink();
+          }
+          final status =
+              _getServiceStatusFromDates(snapshot.data!.map((e) => e.date));
+          if (status == null || !_matchesServiceFilter(status)) {
+            return SizedBox.shrink();
+          }
+          return _buildSearchCard(context, record, status);
+        },
+      );
+    }
+
+    return StreamBuilder<List<BikeServiceRecord>>(
+      stream: queryBikeServiceRecord(
+        queryBuilder: (bikeServiceRecord) =>
+            bikeServiceRecord.where('vechile_no', isEqualTo: record.vechileNo),
+      ),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return SizedBox.shrink();
+        }
+        final status =
+            _getServiceStatusFromDates(snapshot.data!.map((e) => e.date));
+        if (status == null || !_matchesServiceFilter(status)) {
+          return SizedBox.shrink();
+        }
+        return _buildSearchCard(context, record, status);
       },
     );
+  }
 
-    if (confirm != true) {
-      return;
-    }
-
-    try {
-      final now = DateTime.now();
-      final today = DateTime(now.year, now.month, now.day, 10, 0, 0);
-      final yesterday = today.subtract(Duration(days: 1));
-      final last7 = today.subtract(Duration(days: 5));
-      final last30 = today.subtract(Duration(days: 22));
-      final next7 = today.add(Duration(days: 3));
-      final next30 = today.add(Duration(days: 18));
-
-      final batch = FirebaseFirestore.instance.batch();
-
-      final carOneRef =
-          VechileDetailsRecord.collection.doc('search_test_car_1001');
-      final carTwoRef =
-          VechileDetailsRecord.collection.doc('search_test_car_1002');
-      final bikeOneRef =
-          VechileDetailsRecord.collection.doc('search_test_bike_2001');
-      final bikeTwoRef =
-          VechileDetailsRecord.collection.doc('search_test_bike_2002');
-
-      batch.set(
-        carOneRef,
-        createVechileDetailsRecordData(
-          name: 'Demo Car One',
-          mobile: '9000000001',
-          company: 'Honda',
-          model: 'City',
-          vechileNo: 'GJ01AA1001',
-          makeYear: '2021',
-          chasisNo: 'TESTCHASISCAR001',
-          fuelType: 'Petrol',
-          transmission: 'Manual',
-          carBike: 'Car',
+  Widget _buildSearchCard(
+      BuildContext context, VechileDetailsRecord record, String status) {
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 10.0),
+      child: Container(
+        width: double.infinity,
+        height: 154.0,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16.0),
+          border: Border.all(
+            color: Color(0xFFE4E4E4),
+            width: 1.0,
+          ),
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 10.0,
+              color: Color(0x14000000),
+              offset: Offset(0.0, 4.0),
+            )
+          ],
         ),
-        SetOptions(merge: true),
-      );
-      batch.set(
-        carTwoRef,
-        createVechileDetailsRecordData(
-          name: 'Demo Car Two',
-          mobile: '9000000002',
-          company: 'Hyundai',
-          model: 'i20',
-          vechileNo: 'GJ01AA1002',
-          makeYear: '2022',
-          chasisNo: 'TESTCHASISCAR002',
-          fuelType: 'Petrol',
-          transmission: 'Automatic',
-          carBike: 'Car',
+        child: Row(
+          children: [
+            Padding(
+              padding: EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 10.0, 12.0),
+              child: Container(
+                width: 112.0,
+                decoration: BoxDecoration(
+                  color: Color(0xFFF3F3F3),
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12.0),
+                  child: Image.asset(
+                    record.carBike == 'Car'
+                        ? 'assets/images/four-wheeler.png'
+                        : 'assets/images/carApp2.png',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(0.0, 12.0, 12.0, 12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      record.vechileNo,
+                      style: FlutterFlowTheme.of(context).titleMedium.override(
+                            font: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w600,
+                              fontStyle:
+                                  FlutterFlowTheme.of(context)
+                                      .titleMedium
+                                      .fontStyle,
+                            ),
+                            color: Color(0xFF232323),
+                            fontSize: 17.0,
+                            letterSpacing: 0.0,
+                            fontWeight: FontWeight.w600,
+                          ),
+                    ),
+                    SizedBox(height: 6.0),
+                    _buildStatusChip(context, status),
+                    SizedBox(height: 6.0),
+                    Text(
+                      '${record.carBike} • ${record.mobile}',
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            font: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w500,
+                              fontStyle: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontStyle,
+                            ),
+                            color: Color(0xFF7A7A7A),
+                            fontSize: 12.0,
+                            letterSpacing: 0.0,
+                            fontWeight: FontWeight.w500,
+                          ),
+                    ),
+                    Spacer(),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: FFButtonWidget(
+                            onPressed: () async {
+                              if (record.carBike == 'Car') {
+                                context.pushNamed(
+                                  ServiceForm2Widget.routeName,
+                                  queryParameters: {
+                                    'vechileNo': serializeParam(
+                                      record.vechileNo,
+                                      ParamType.String,
+                                    ),
+                                  }.withoutNulls,
+                                );
+                              } else {
+                                context.pushNamed(
+                                  ServiceForm1Widget.routeName,
+                                  queryParameters: {
+                                    'vechileNo': serializeParam(
+                                      record.vechileNo,
+                                      ParamType.String,
+                                    ),
+                                  }.withoutNulls,
+                                );
+                              }
+                            },
+                            text: 'Service',
+                            options: FFButtonOptions(
+                              height: 34.0,
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  16.0, 0.0, 16.0, 0.0),
+                              iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 0.0),
+                              color: Color(0xFF1F1F1F),
+                              textStyle:
+                                  FlutterFlowTheme.of(context).bodySmall.override(
+                                        font: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w500,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodySmall
+                                                  .fontStyle,
+                                        ),
+                                        color: Colors.white,
+                                        fontSize: 12.5,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                              elevation: 0.0,
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 8.0),
+                        Expanded(
+                          child: FFButtonWidget(
+                            onPressed: () async {
+                              if (record.carBike == 'Car') {
+                                context.pushNamed(
+                                  HistoryCarWidget.routeName,
+                                  queryParameters: {
+                                    'vechileNo': serializeParam(
+                                      record.vechileNo,
+                                      ParamType.String,
+                                    ),
+                                    'carBike': serializeParam(
+                                      record.carBike,
+                                      ParamType.String,
+                                    ),
+                                  }.withoutNulls,
+                                );
+                              } else {
+                                context.pushNamed(
+                                  HistoryBikeWidget.routeName,
+                                  queryParameters: {
+                                    'vechileNo': serializeParam(
+                                      record.vechileNo,
+                                      ParamType.String,
+                                    ),
+                                    'carBike': serializeParam(
+                                      record.carBike,
+                                      ParamType.String,
+                                    ),
+                                  }.withoutNulls,
+                                );
+                              }
+                            },
+                            text: 'History',
+                            options: FFButtonOptions(
+                              height: 34.0,
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  16.0, 0.0, 16.0, 0.0),
+                              iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                  0.0, 0.0, 0.0, 0.0),
+                              color: Colors.white,
+                              textStyle:
+                                  FlutterFlowTheme.of(context).bodySmall.override(
+                                        font: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w500,
+                                          fontStyle:
+                                              FlutterFlowTheme.of(context)
+                                                  .bodySmall
+                                                  .fontStyle,
+                                        ),
+                                        color: Color(0xFF1F1F1F),
+                                        fontSize: 12.5,
+                                        letterSpacing: 0.0,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                              elevation: 0.0,
+                              borderSide: BorderSide(
+                                color: Color(0xFF1F1F1F),
+                              ),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
-        SetOptions(merge: true),
-      );
-      batch.set(
-        bikeOneRef,
-        createVechileDetailsRecordData(
-          name: 'Demo Bike One',
-          mobile: '9000000003',
-          company: 'Honda',
-          model: 'Activa',
-          vechileNo: 'GJ01BK2001',
-          makeYear: '2023',
-          chasisNo: 'TESTCHASISBIKE001',
-          fuelType: 'Petrol',
-          transmission: 'Auto',
-          carBike: 'Bike',
-        ),
-        SetOptions(merge: true),
-      );
-      batch.set(
-        bikeTwoRef,
-        createVechileDetailsRecordData(
-          name: 'Demo Bike Two',
-          mobile: '9000000004',
-          company: 'TVS',
-          model: 'Jupiter',
-          vechileNo: 'GJ01BK2002',
-          makeYear: '2020',
-          chasisNo: 'TESTCHASISBIKE002',
-          fuelType: 'Petrol',
-          transmission: 'Auto',
-          carBike: 'Bike',
-        ),
-        SetOptions(merge: true),
-      );
-
-      batch.set(
-        CarServiceRecord.collection.doc('search_test_car_today'),
-        createCarServiceRecordData(
-          vechileNo: 'GJ01AA1001',
-          date: today,
-          notifications: 'Yes',
-        ),
-        SetOptions(merge: true),
-      );
-      batch.set(
-        CarServiceRecord.collection.doc('search_test_car_yesterday'),
-        createCarServiceRecordData(
-          vechileNo: 'GJ01AA1002',
-          date: yesterday,
-          notifications: 'Yes',
-        ),
-        SetOptions(merge: true),
-      );
-      batch.set(
-        CarServiceRecord.collection.doc('search_test_car_next_7'),
-        createCarServiceRecordData(
-          vechileNo: 'GJ01AA1001',
-          date: next7,
-          notifications: 'Yes',
-        ),
-        SetOptions(merge: true),
-      );
-      batch.set(
-        CarServiceRecord.collection.doc('search_test_car_next_30'),
-        createCarServiceRecordData(
-          vechileNo: 'GJ01AA1002',
-          date: next30,
-          notifications: 'Yes',
-        ),
-        SetOptions(merge: true),
-      );
-
-      batch.set(
-        BikeServiceRecord.collection.doc('search_test_bike_last_7'),
-        createBikeServiceRecordData(
-          vechileNo: 'GJ01BK2001',
-          date: last7,
-          notifications: 'Yes',
-        ),
-        SetOptions(merge: true),
-      );
-      batch.set(
-        BikeServiceRecord.collection.doc('search_test_bike_last_30'),
-        createBikeServiceRecordData(
-          vechileNo: 'GJ01BK2002',
-          date: last30,
-          notifications: 'Yes',
-        ),
-        SetOptions(merge: true),
-      );
-
-      await batch.commit();
-
-      if (!mounted) {
-        return;
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content:
-              Text('Test data added. You can now verify all filter options.'),
-        ),
-      );
-      _model.listViewPagingController?.refresh();
-    } catch (e) {
-      if (!mounted) {
-        return;
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to add test data: $e'),
-        ),
-      );
-    }
+      ),
+    );
   }
 
   @override
@@ -265,36 +487,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                   fontWeight: FontWeight.w700,
                 ),
           ),
-          actions: [
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0.0, 8.0, 10.0, 8.0),
-              child: FFButtonWidget(
-                onPressed: () async {
-                  await _seedSearchTestData(context);
-                },
-                text: 'Seed Data',
-                options: FFButtonOptions(
-                  height: 34.0,
-                  padding: EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 12.0, 0.0),
-                  iconPadding:
-                      EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                  color: Color(0xFF1F1F1F),
-                  textStyle: FlutterFlowTheme.of(context).bodySmall.override(
-                        font: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w600,
-                          fontStyle:
-                              FlutterFlowTheme.of(context).bodySmall.fontStyle,
-                        ),
-                        color: Colors.white,
-                        letterSpacing: 0.0,
-                        fontWeight: FontWeight.w600,
-                      ),
-                  elevation: 0.0,
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-              ),
-            ),
-          ],
+          actions: [],
           centerTitle: true,
           elevation: 0.0,
         ),
@@ -436,32 +629,12 @@ class _SearchWidgetState extends State<SearchWidget> {
                                 .asValidator(context),
                           ),
                         ),
-                        InkWell(
-                          splashColor: Colors.transparent,
-                          focusColor: Colors.transparent,
-                          hoverColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                          onTap: () async {
-                            context.pushNamed(FilterWidget.routeName);
-                          },
-                          child: Container(
-                            width: 32.0,
-                            height: 32.0,
-                            decoration: BoxDecoration(
-                              color: Color(0xFFE3E3E3),
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            child: Icon(
-                              Icons.tune_rounded,
-                              color: Color(0xFF2A2A2A),
-                              size: 18.0,
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                   ),
                 ),
+                SizedBox(height: 14.0),
+                _buildServiceFilterChips(context),
                 SizedBox(height: 14.0),
                 Expanded(
                   child: PagedListView<DocumentSnapshot<Object?>?,
@@ -536,258 +709,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                           return SizedBox.shrink();
                         }
 
-                        return Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 10.0),
-                          child: Container(
-                            width: double.infinity,
-                            height: 144.0,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16.0),
-                              border: Border.all(
-                                color: Color(0xFFE4E4E4),
-                                width: 1.0,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  blurRadius: 10.0,
-                                  color: Color(0x14000000),
-                                  offset: Offset(0.0, 4.0),
-                                )
-                              ],
-                            ),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      12.0, 12.0, 10.0, 12.0),
-                                  child: Container(
-                                    width: 112.0,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFFF3F3F3),
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(12.0),
-                                      child: Image.asset(
-                                        record.carBike == 'Car'
-                                            ? 'assets/images/four-wheeler.png'
-                                            : 'assets/images/two-wheeler.png',
-                                        fit: BoxFit.contain,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        0.0, 12.0, 12.0, 12.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          record.vechileNo,
-                                          style: FlutterFlowTheme.of(context)
-                                              .titleMedium
-                                              .override(
-                                                font: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .titleMedium
-                                                          .fontStyle,
-                                                ),
-                                                color: Color(0xFF232323),
-                                                fontSize: 17.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                        ),
-                                        SizedBox(height: 4.0),
-                                        Text(
-                                          '${record.carBike} • ${record.mobile}',
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyMedium
-                                              .override(
-                                                font: GoogleFonts.poppins(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontStyle:
-                                                      FlutterFlowTheme.of(
-                                                              context)
-                                                          .bodyMedium
-                                                          .fontStyle,
-                                                ),
-                                                color: Color(0xFF7A7A7A),
-                                                fontSize: 12.0,
-                                                letterSpacing: 0.0,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                        ),
-                                        Spacer(),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: FFButtonWidget(
-                                                onPressed: () async {
-                                                  if (record.carBike == 'Car') {
-                                                    context.pushNamed(
-                                                      ServiceForm2Widget
-                                                          .routeName,
-                                                      queryParameters: {
-                                                        'vechileNo':
-                                                            serializeParam(
-                                                          record.vechileNo,
-                                                          ParamType.String,
-                                                        ),
-                                                      }.withoutNulls,
-                                                    );
-                                                  } else {
-                                                    context.pushNamed(
-                                                      ServiceForm1Widget
-                                                          .routeName,
-                                                      queryParameters: {
-                                                        'vechileNo':
-                                                            serializeParam(
-                                                          record.vechileNo,
-                                                          ParamType.String,
-                                                        ),
-                                                      }.withoutNulls,
-                                                    );
-                                                  }
-                                                },
-                                                text: 'Service',
-                                                options: FFButtonOptions(
-                                                  height: 34.0,
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                          16.0, 0.0, 16.0, 0.0),
-                                                  iconPadding:
-                                                      EdgeInsetsDirectional
-                                                          .fromSTEB(0.0, 0.0,
-                                                              0.0, 0.0),
-                                                  color: Color(0xFF1F1F1F),
-                                                  textStyle: FlutterFlowTheme
-                                                          .of(context)
-                                                      .bodySmall
-                                                      .override(
-                                                        font:
-                                                            GoogleFonts.poppins(
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodySmall
-                                                                  .fontStyle,
-                                                        ),
-                                                        color: Colors.white,
-                                                        fontSize: 12.5,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                                  elevation: 0.0,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10.0),
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: 8.0),
-                                            Expanded(
-                                              child: FFButtonWidget(
-                                                onPressed: () async {
-                                                  if (record.carBike == 'Car') {
-                                                    context.pushNamed(
-                                                      HistoryCarWidget
-                                                          .routeName,
-                                                      queryParameters: {
-                                                        'vechileNo':
-                                                            serializeParam(
-                                                          record.vechileNo,
-                                                          ParamType.String,
-                                                        ),
-                                                        'carBike':
-                                                            serializeParam(
-                                                          record.carBike,
-                                                          ParamType.String,
-                                                        ),
-                                                      }.withoutNulls,
-                                                    );
-                                                  } else {
-                                                    context.pushNamed(
-                                                      HistoryBikeWidget
-                                                          .routeName,
-                                                      queryParameters: {
-                                                        'vechileNo':
-                                                            serializeParam(
-                                                          record.vechileNo,
-                                                          ParamType.String,
-                                                        ),
-                                                        'carBike':
-                                                            serializeParam(
-                                                          record.carBike,
-                                                          ParamType.String,
-                                                        ),
-                                                      }.withoutNulls,
-                                                    );
-                                                  }
-                                                },
-                                                text: 'History',
-                                                options: FFButtonOptions(
-                                                  height: 34.0,
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(
-                                                          16.0, 0.0, 16.0, 0.0),
-                                                  iconPadding:
-                                                      EdgeInsetsDirectional
-                                                          .fromSTEB(0.0, 0.0,
-                                                              0.0, 0.0),
-                                                  color: Colors.white,
-                                                  textStyle: FlutterFlowTheme
-                                                          .of(context)
-                                                      .bodySmall
-                                                      .override(
-                                                        font:
-                                                            GoogleFonts.poppins(
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontStyle:
-                                                              FlutterFlowTheme.of(
-                                                                      context)
-                                                                  .bodySmall
-                                                                  .fontStyle,
-                                                        ),
-                                                        color:
-                                                            Color(0xFF1F1F1F),
-                                                        fontSize: 12.5,
-                                                        letterSpacing: 0.0,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                                  elevation: 0.0,
-                                                  borderSide: BorderSide(
-                                                    color: Color(0xFF1F1F1F),
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10.0),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
+                        return _buildSearchCardWithFilter(context, record);
                       },
                     ),
                   ),
