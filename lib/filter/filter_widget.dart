@@ -95,7 +95,7 @@ class _FilterWidgetState extends State<FilterWidget> {
           _ServiceFilterItem(
               label: 'Due Service Last 7 Days', queryValue: 'Last 7 Days'),
           _ServiceFilterItem(
-              label: 'Due Service Last 30 Days', queryValue: ' Last 30 Days'),
+              label: 'Due Service Last 30 Days', queryValue: 'Last 30 Days'),
         ];
       case _ServiceGroup.upcoming:
         return const [
@@ -189,7 +189,7 @@ class _FilterWidgetState extends State<FilterWidget> {
           FilterShowWidget.routeName,
           queryParameters: {
             'today': serializeParam(
-              item.queryValue,
+              item.queryValue.trim(),
               ParamType.String,
             ),
           }.withoutNulls,
@@ -687,19 +687,19 @@ class _FilterWidgetState extends State<FilterWidget> {
       },
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+        backgroundColor: Color(0xFFF3F3F3),
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(50.0),
           child: AppBar(
-            backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
+            backgroundColor: Color(0xFFF3F3F3),
             automaticallyImplyLeading: false,
             leading: FlutterFlowIconButton(
               borderRadius: 8.0,
               buttonSize: 40.0,
-              fillColor: Colors.black,
+              fillColor: Colors.white,
               icon: Icon(
                 Icons.arrow_back,
-                color: FlutterFlowTheme.of(context).info,
+                color: Color(0xFF2A2A2A),
                 size: 24.0,
               ),
               onPressed: () async {
