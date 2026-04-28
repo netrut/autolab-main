@@ -580,7 +580,7 @@ keytool -genkey -v -keystore ~/autolab.keystore \
   -storetype JKS
 
 # You'll be asked for:
-# - Password (use: AutoLabDB@2024!Secure)
+# - Password (use: AutoLab@2024#)
 # - Full Name: AutoLab Inc
 # - Organization: AutoLab
 # - City: Your City
@@ -591,8 +591,8 @@ keytool -genkey -v -keystore ~/autolab.keystore \
 Create `android/key.properties`:
 
 ```properties
-storePassword=AutoLabDB@2024!Secure
-keyPassword=AutoLabDB@2024!Secure
+storePassword=AutoLab@2024#
+keyPassword=AutoLab@2024#
 keyAlias=autolab
 storeFile=../autolab.keystore
 ```

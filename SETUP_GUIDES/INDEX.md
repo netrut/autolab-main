@@ -193,7 +193,7 @@
 
 **Practical outcome:** Production-ready PostgreSQL database
 
-**Password used:** `AutoLabDB@2024!Secure`
+**Password used:** `AutoLab@2024#`
 
 ---
 

@@ -100,7 +100,7 @@ Free Tier Status:       ✅ Using free tier
 
 ```
 Database User:          postgres
-Database Password:      AutoLabDB@2024!Secure
+Database Password:      AutoLab@2024#
 Database Host:          db.[PROJECT_ID].supabase.co
 Database Port:          5432
 Database Name:          postgres
@@ -111,7 +111,7 @@ SSL Mode:               require
 
 **Production (use this in backend):**
 ```
-postgresql://postgres:AutoLabDB@2024!Secure@db.[PROJECT_ID].supabase.co:5432/postgres
+postgresql://postgres:AutoLab@2024#@db.[PROJECT_ID].supabase.co:5432/postgres
 ```
 
 **Pooling (optional for high traffic):**
@@ -363,7 +363,7 @@ Status:                 [Account created/Not yet]
 
 ```env
 # Database
-DATABASE_URL=postgresql://postgres:AutoLabDB@2024!Secure@db.[PROJECT_ID].supabase.co:5432/postgres
+DATABASE_URL=postgresql://postgres:AutoLab@2024#@db.[PROJECT_ID].supabase.co:5432/postgres
 
 # Express
 API_PORT=3000
@@ -410,7 +410,7 @@ NEXT_PUBLIC_API_URL=http://localhost:3000
 NEXT_PUBLIC_API_URL_PROD=https://autolab-backend.vercel.app
 
 # Database (if needed)
-DATABASE_URL=postgresql://postgres:AutoLabDB@2024!Secure@db.[PROJECT_ID].supabase.co:5432/postgres
+DATABASE_URL=postgresql://postgres:AutoLab@2024#@db.[PROJECT_ID].supabase.co:5432/postgres
 
 # Authentication
 NEXTAUTH_SECRET=[Generate with: openssl rand -base64 32]
@@ -581,7 +581,7 @@ After completing setup guides, verify you have:
 
 - [ ] GitHub account and SSH key
 - [ ] Supabase account and database created
-- [ ] Database password: AutoLabDB@2024!Secure
+- [ ] Database password: AutoLab@2024#
 - [ ] Connection string saved
 - [ ] Firebase project created
 - [ ] Service account key downloaded

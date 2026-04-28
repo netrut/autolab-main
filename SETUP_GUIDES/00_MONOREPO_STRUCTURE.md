@@ -41,22 +41,27 @@ autolab-monorepo/                          (Root folder)
 │   │
 │   ├── 💻 backend/                        (Node.js/Express API)
 │   │   ├── src/
+│   │   │   ├── index.ts                   (Main entry point - combine all APIs)
 │   │   │   ├── server.ts
 │   │   │   ├── routes/
+│   │   │   │   ├── index.ts               (Main routes file - export all routes)
 │   │   │   │   ├── auth.ts
 │   │   │   │   ├── users.ts
 │   │   │   │   ├── vehicles.ts
 │   │   │   │   ├── services.ts
 │   │   │   │   └── bookings.ts
 │   │   │   ├── controllers/
+│   │   │   │   ├── index.ts               (Export all controllers)
 │   │   │   │   ├── authController.ts
 │   │   │   │   ├── userController.ts
 │   │   │   │   └── ...
 │   │   │   ├── middleware/
+│   │   │   │   ├── index.ts               (Export all middleware)
 │   │   │   │   ├── auth.ts
 │   │   │   │   ├── errorHandler.ts
 │   │   │   │   └── validation.ts
 │   │   │   ├── services/
+│   │   │   │   ├── index.ts               (Export all services)
 │   │   │   │   ├── emailService.ts
 │   │   │   │   └── fcmService.ts
 │   │   │   └── utils/
@@ -170,13 +175,25 @@ autolab-monorepo/                          (Root folder)
 **Size:** ~50 MB (with node_modules)
 **Runs on:** Vercel (serverless)
 **Key files:**
-- `src/server.ts` - Entry point
-- `src/routes/` - API endpoints
+- `src/index.ts` - Main entry point (combine all APIs)
+- `src/server.ts` - Express server configuration
+- `src/routes/index.ts` - Main routes file (export all routes)
+- `src/routes/auth.ts`, `users.ts`, `vehicles.ts` - Individual API routes
+- `src/controllers/index.ts` - Export all controllers
+- `src/middleware/index.ts` - Export all middleware
+- `src/services/index.ts` - Export all services
 - `prisma/schema.prisma` - Database schema
 - `package.json` - Dependencies
 - `.env` - Secrets (passwords, keys)
 
 **Connects to:** Supabase PostgreSQL, Firebase (optional)
+
+**Index Files Explanation:**
+- **src/index.ts** - Creates the Express app and combines all routes/middleware
+- **src/routes/index.ts** - Exports all route modules (auth, users, vehicles, etc.)
+- **src/controllers/index.ts** - Central export point for all controller functions
+- **src/middleware/index.ts** - Central export point for all middleware functions
+- **src/services/index.ts** - Central export point for all service modules
 
 #### 3. **Admin Dashboard** (`apps/admin-dashboard/`)
 **What:** Web interface for admins
@@ -194,7 +211,124 @@ autolab-monorepo/                          (Root folder)
 
 ---
 
-### Packages Folder (Shared Code)
+---
+
+## 📁 Backend Index Files Architecture
+
+### Purpose of Index Files
+
+Index files (`index.ts`) in each backend folder organize and centralize exports, making it easy to:
+- ✅ Manage multiple APIs in one place
+- ✅ Keep imports clean throughout the app
+- ✅ Add/remove routes/controllers/middleware easily
+- ✅ Maintain consistent structure
+
+### Example: How Index Files Work
+
+#### 1. **src/index.ts** - Main Entry Point
+```typescript
+import express from 'express';
+import { authRoutes, userRoutes, vehicleRoutes, serviceRoutes, bookingRoutes } from './routes';
+import { authMiddleware, errorHandler } from './middleware';
+
+const app = express();
+
+// Global middleware
+app.use(express.json());
+app.use(authMiddleware);
+
+// All routes combined in one place
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/vehicles', vehicleRoutes);
+app.use('/api/services', serviceRoutes);
+app.use('/api/bookings', bookingRoutes);
+
+// Error handling
+app.use(errorHandler);
+
+export default app;
+```
+
+#### 2. **src/routes/index.ts** - Combine All Routes
+```typescript
+export { authRoutes } from './auth';
+export { userRoutes } from './users';
+export { vehicleRoutes } from './vehicles';
+export { serviceRoutes } from './services';
+export { bookingRoutes } from './bookings';
+```
+
+#### 3. **src/routes/auth.ts** - Individual Route Module
+```typescript
+import express from 'express';
+import { loginController, registerController } from '../controllers';
+
+export const authRoutes = express.Router();
+
+authRoutes.post('/login', loginController);
+authRoutes.post('/register', registerController);
+```
+
+#### 4. **src/controllers/index.ts** - Export All Controllers
+```typescript
+export { loginController, registerController } from './authController';
+export { getUserController, updateUserController } from './userController';
+export { getVehiclesController, createVehicleController } from './vehicleController';
+// ... more controllers
+```
+
+#### 5. **src/middleware/index.ts** - Export All Middleware
+```typescript
+export { authMiddleware } from './auth';
+export { errorHandler } from './errorHandler';
+export { validateRequest } from './validation';
+```
+
+#### 6. **src/services/index.ts** - Export All Services
+```typescript
+export { EmailService } from './emailService';
+export { FCMService } from './fcmService';
+export { UserService } from './userService';
+```
+
+### Benefits of This Structure
+
+| Feature | Benefit |
+|---------|---------|
+| **Centralized Exports** | Easy to see all available functions/routes |
+| **Scalable** | Add new route/controller/service easily |
+| **Maintainable** | Changes in one place ripple through |
+| **Clean Imports** | Instead of `../../../controllers/authController`, use `../../controllers` |
+| **Team-Friendly** | New developers see structure at a glance |
+
+### Adding New API
+
+To add a new API (e.g., `ratings`):
+
+**Step 1:** Create `src/routes/ratings.ts`
+```typescript
+import express from 'express';
+import { getRatingsController, createRatingController } from '../controllers';
+
+export const ratingRoutes = express.Router();
+ratingRoutes.get('/', getRatingsController);
+ratingRoutes.post('/', createRatingController);
+```
+
+**Step 2:** Update `src/routes/index.ts`
+```typescript
+export { ratingRoutes } from './ratings';  // Add this line
+```
+
+**Step 3:** Update `src/index.ts`
+```typescript
+app.use('/api/ratings', ratingRoutes);  // Add this line
+```
+
+That's it! No other changes needed.
+
+---
 
 #### 1. **Shared Types** (`packages/shared-types/`)
 **Purpose:** TypeScript types used in multiple apps

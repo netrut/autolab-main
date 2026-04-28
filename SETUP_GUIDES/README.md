@@ -207,8 +207,8 @@ autolab-monorepo/
 
 ## ⚠️ Important Notes
 
-### Password: `AutoLabDB@2024!Secure`
-This is the recommended Supabase database password. Use it consistently across all guides.
+### Password: `AutoLab@2024#`
+This is the recommended password for all initial setup. Use it consistently across all guides (Supabase database, keystores, app signing, etc.).
 
 ### Before You Start
 - Have GitHub account ready

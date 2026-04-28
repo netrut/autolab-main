@@ -22,7 +22,7 @@ You'll create:
 
 **Recommended Database Password:**
 ```
-AutoLabDB@2024!Secure
+AutoLab@2024#
 ```
 
 **Where you'll use it:**
@@ -102,7 +102,7 @@ After email confirmation, you should see:
 
 ```
 Project Name:           autolab-db
-Database Password:      AutoLabDB@2024!Secure
+Database Password:      AutoLab@2024#
 Region:                 Asia - Singapore (or India - Mumbai)
 Pricing Plan:           Free (starter)
 ```
@@ -115,7 +115,7 @@ Pricing Plan:           Free (starter)
 
 2. **Database Password field:**
    - Click on password field
-   - Type: `AutoLabDB@2024!Secure`
+   - Type: `AutoLab@2024#`
    - ✅ Make sure caps are correct: `Auto`, `Lab`, `DB`, `S`, `ecure`
 
 3. **Region dropdown:**
@@ -190,11 +190,11 @@ After creation, you'll see:
 
 **Format:**
 ```
-postgresql://postgres:AutoLabDB@2024!Secure@db.abcdefgh123456.supabase.co:5432/postgres
+postgresql://postgres:AutoLab@2024#@db.abcdefgh123456.supabase.co:5432/postgres
 ```
 
 **Note:** 
-- `AutoLabDB@2024!Secure` = Your database password
+- `AutoLab@2024#` = Your database password
 - `abcdefgh123456` = Your Project ID (unique to your project)
 
 ---
@@ -512,8 +512,8 @@ INSERT INTO bookings (id, user_id, vehicle_id, service_center_id, service_type, 
 
 ```
 Database Name:         autolab-db
-Database Password:     AutoLabDB@2024!Secure
-Connection String:     postgresql://postgres:AutoLabDB@2024!Secure@db.PROJECT_ID.supabase.co:5432/postgres
+Database Password:     AutoLab@2024#
+Connection String:     postgresql://postgres:AutoLab@2024#@db.PROJECT_ID.supabase.co:5432/postgres
 Region:                Asia - Singapore (or India - Mumbai)
 Tables Created:        6 (users, vehicles, service_centers, car_services, bike_services, bookings)
 Test Data Added:       ✅ Yes
@@ -527,7 +527,7 @@ Test Data Added:       ✅ Yes
 
 - [ ] Supabase account created with autolabstation@gmail.com
 - [ ] Database project "autolab-db" created
-- [ ] Database password: AutoLabDB@2024!Secure
+- [ ] Database password: AutoLab@2024#
 - [ ] Connection string obtained
 - [ ] PostgreSQL extensions enabled (uuid-ossp, pgcrypto)
 - [ ] 6 tables created:
